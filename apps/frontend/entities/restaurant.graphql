@@ -1,0 +1,72 @@
+query findRestaurants(
+  $filter: RestaurantFiltersInput
+  $pagination: PaginationArg
+  $sort: [String]
+  $locale: I18NLocaleCode = "all"
+) {
+  restaurants(
+    filters: $filter
+    pagination: $pagination
+    sort: $sort
+    locale: $locale
+  ) {
+    ...RestaurantFields
+  }
+}
+
+fragment RestaurantFields on RestaurantEntityResponseCollection {
+  data {
+    id
+    attributes {
+      name
+      slug
+    }
+  }
+}
+
+query findRestaurantMenu($restaurantId: ID!, $locale: I18NLocaleCode) {
+  restaurant(id: $restaurantId, locale: $locale) {
+    data {
+      attributes {
+        menu {
+          ...MenuFields
+        }
+      }
+    }
+  }
+}
+
+fragment MenuFields on MenuEntityResponse {
+  data {
+    attributes {
+      name
+      description
+      items {
+        ...MenuItemFields
+      }
+    }
+  }
+}
+
+fragment MenuItemFields on ComponentInventoryMenuItems {
+  id
+  price
+  name
+  description
+  thumbnail {
+    ...ThumbnailFields
+  }
+}
+
+fragment ThumbnailFields on UploadFileEntityResponse {
+  data {
+    attributes {
+      name
+      alternativeText
+      width
+      height
+      formats
+      url
+    }
+  }
+}

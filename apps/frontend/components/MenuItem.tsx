@@ -1,10 +1,10 @@
-import { Item } from 'entities/menu-item';
 import { animated, useSpring } from '@react-spring/web';
-import Image from 'next/image';
 import { useDrag } from '@use-gesture/react';
+import { Item } from 'entities/menu-item';
+import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
 import { memo, useRef } from 'react';
 import { ItemData } from './ItemData';
-import { useRouter } from 'next/router';
 
 type Props = {
   item: Item;
@@ -12,8 +12,8 @@ type Props = {
 };
 
 export const MenuItem = memo<Props>((props) => {
-  const { locale = 'en-us' } = useRouter();
   const { item, onOrder } = props;
+  const { t } = useTranslation('menu');
   const { x, opacity } = useSpring({ x: 0, opacity: 0 });
   const ref = useRef<HTMLDivElement>(null);
   const bind = useDrag(({ active, movement: [mx] }) => {
@@ -46,9 +46,7 @@ export const MenuItem = memo<Props>((props) => {
         style={{ opacity }}
         className="bg-gradient-to-r pl-2 shadow-inner shadow-green-500/50 from-green-400 to-green-700 flex rtl:flex-row-reverse just items-center absolute inset-0"
       >
-        <span className="text-2xl text-green-900">
-          {locale === 'he' ? 'תביא!' : 'Give me!'}
-        </span>
+        <span className="text-2xl text-green-900">{t('give me')}</span>
       </animated.div>
       <animated.div
         style={{ x }}

@@ -1,11 +1,5 @@
+import { extract, gqlPayload } from 'utils/zod';
 import { z } from 'zod';
-
-export const MenuItem = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string(),
-  price: z.number(),
-});
 
 const Format = z
   .object({
@@ -22,35 +16,26 @@ const Format = z
     };
   });
 
-export type Format = z.infer<typeof Format>;
-
 const Formats = z.record(Format);
 
-export type Formats = z.infer<typeof Formats>;
-
-const Thumbnail = z
-  .object({
-    data: z.object({
-      attributes: z.object({
-        alternativeText: z.string().default('delicious looking food-item'),
-        formats: Formats,
-        name: z.string(),
-        url: z.string(),
-        height: z.number(),
-        width: z.number(),
-      }),
-    }),
-  })
-  .transform((value) => value.data.attributes);
-
-export type Thumbnail = z.infer<typeof Thumbnail>;
+export const Thumbnail = z.object({
+  alternativeText: z.string().default('delicious looking food-item'),
+  formats: Formats,
+  name: z.string(),
+  url: z.string(),
+  height: z.number(),
+  width: z.number(),
+});
 
 export const Item = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
   price: z.number(),
-  thumbnail: Thumbnail,
+  thumbnail: gqlPayload(Thumbnail).transform(extract),
 });
 
+export type Format = z.infer<typeof Format>;
+export type Formats = z.infer<typeof Formats>;
 export type Item = z.infer<typeof Item>;
+export type Thumbnail = Item['thumbnail'];

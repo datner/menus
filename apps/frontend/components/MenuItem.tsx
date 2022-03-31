@@ -38,7 +38,7 @@ export const MenuItem = memo<Props>((props) => {
     }
   });
 
-  const image = item.thumbnail.formats.small;
+  const image = item.thumbnail;
 
   return (
     <animated.li className="col-span-1 p-2 relative overflow-hidden">

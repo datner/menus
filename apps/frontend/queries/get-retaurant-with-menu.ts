@@ -42,8 +42,8 @@ export const ThumbnailFragment = gql`
       attributes {
         name
         alternativeText
+        hash
         url
-        formats
         width
         height
       }

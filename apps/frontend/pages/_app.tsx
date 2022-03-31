@@ -1,14 +1,16 @@
 import { ApolloProvider } from '@apollo/client';
-import { ToastContainer } from 'react-toastify';
 import client from 'apollo-client';
 import { appWithTranslation } from 'next-i18next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import './styles.css';
+import { ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
+import './styles.css';
 
 function CustomApp({ Component, pageProps, router }: AppProps) {
   const { locale } = router;
+
   return (
     <ApolloProvider client={client}>
       <Head>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const gqlPayload = <T extends z.AnyZodObject>(shape: T) =>
+export const gqlPayload = <T extends z.ZodTypeAny>(shape: T) =>
   z.object({
     data: z.object({
       id: z.string(),

@@ -1,9 +1,14 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMutation } from '@apollo/client';
 import client from 'apollo-client';
+import type { TransformationOptions, UrlOptions } from 'cloudinary';
+import cloudinary from 'cloudinary-config';
 import { MenuItem } from 'components/MenuItem';
 import { MenuList } from 'components/MenuList';
 import { OrderButton } from 'components/OrderButton';
+import * as A from 'fp-ts/Array';
+import { pipe } from 'fp-ts/function';
+import * as L from 'monocle-ts/Lens';
+import * as T from 'monocle-ts/Traversal';
 import {
   CreateOrder,
   CreateOrderResponse,
@@ -11,17 +16,18 @@ import {
   SEND_ORDER,
 } from 'mutations/send-order';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import {
-  GET_TABLE_PATHS,
-  TablePaths,
-  TablePathsInput,
-} from 'queries/get-table-paths';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
   GetRestaurantWithMenuVariables,
   GET_RESTAURANT_WITH_MENU,
   RestaurantWithMenu,
   RestaurantWithMenuInput,
 } from 'queries/get-retaurant-with-menu';
+import {
+  GET_TABLE_PATHS,
+  TablePaths,
+  TablePathsInput,
+} from 'queries/get-table-paths';
 import { useState } from 'react';
 import { invariant } from 'ts-invariant';
 import { Locale } from 'utils/zod';
@@ -82,6 +88,30 @@ export const getStaticPaths: GetStaticPaths<QueryParams> = async () => {
   };
 };
 
+const thumbnail = pipe(
+  L.id<RestaurantWithMenu>(),
+  L.prop('menu'),
+  L.prop('items'),
+  L.traverse(A.Traversable),
+  T.prop('thumbnail')
+);
+
+const makeAssetTransformer = (options: UrlOptions | TransformationOptions) =>
+  pipe(
+    thumbnail,
+    T.modify((it) => {
+      it.url = cloudinary.url(it.hash, options);
+      return it;
+    })
+  );
+
+const toAssets = makeAssetTransformer({
+  gravity: 'north',
+  height: 112,
+  width: 224,
+  crop: 'fill',
+});
+
 export const getStaticProps: GetStaticProps<TableProps, QueryParams> = async (
   context
 ) => {
@@ -94,7 +124,6 @@ export const getStaticProps: GetStaticProps<TableProps, QueryParams> = async (
 
   const locale = Locale.parse(locale_);
 
-  console.log({ slug, locale });
   const query = await client.query<
     RestaurantWithMenuInput,
     GetRestaurantWithMenuVariables
@@ -103,7 +132,9 @@ export const getStaticProps: GetStaticProps<TableProps, QueryParams> = async (
     variables: { slug, locale },
   });
 
-  const restaurantWithMenu = RestaurantWithMenu.parse(query.data);
+  const restaurantWithMenu = RestaurantWithMenu.transform(toAssets).parse(
+    query.data
+  );
   const i18props = await serverSideTranslations(locale, ['common', 'menu']);
   return {
     props: {

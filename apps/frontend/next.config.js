@@ -13,7 +13,12 @@ const nextConfig = {
     svgr: false,
   },
   images: {
-    domains: ['images.unsplash.com', 'res.cloudinary.com', 'localhost'],
+    domains: [
+      'images.unsplash.com',
+      'res.cloudinary.com',
+      'localhost',
+      'menus-postgres.herokuapp.com',
+    ],
   },
   i18n,
 };

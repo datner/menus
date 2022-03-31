@@ -66,7 +66,7 @@ function OrderItem(props: OrderItemProps) {
               priority
               layout="fill"
               objectFit="cover"
-              src={item.thumbnail.formats.thumbnail.url}
+              src={item.thumbnail.url}
               alt={item.thumbnail.alternativeText}
               aria-hidden
             />

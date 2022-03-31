@@ -2,11 +2,12 @@ import { gql } from '@apollo/client';
 import { Item, Thumbnail } from 'entities/menu-item';
 import { z } from 'zod';
 
-export const OrderItem = z
-  .object(Item.shape)
-  .omit({ id: true })
-  .extend({ thumbnail: z.object(Thumbnail.shape).extend({ id: z.string() }) })
-  .transform((value) => ({ ...value, thumbnail: value.thumbnail.id }));
+export const OrderItem = Item.omit({ id: true })
+  .extend({ thumbnail: Thumbnail.extend({ id: z.string() }) })
+  .transform((value) => ({
+    ...value,
+    thumbnail: value.thumbnail.id,
+  }));
 
 export const CreateOrder = z.object({
   order: z.object({

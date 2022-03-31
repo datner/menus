@@ -1,0 +1,7 @@
+mutation sendOrder($order: OrderInput!) {
+  createOrder(data: $order) {
+    data {
+      id
+    }
+  }
+}

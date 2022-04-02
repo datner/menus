@@ -4,10 +4,8 @@ import { z } from 'zod';
 export const Thumbnail = z.object({
   alternativeText: z.string().default('delicious looking food-item'),
   name: z.string(),
-  url: z.string(),
   hash: z.string(),
-  height: z.number(),
-  width: z.number(),
+  url: z.string().default('PLACEHOLDER'),
 });
 
 export const Item = z.object({

@@ -43,9 +43,6 @@ export const ThumbnailFragment = gql`
         name
         alternativeText
         hash
-        url
-        width
-        height
       }
     }
   }

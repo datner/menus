@@ -1,5 +1,9 @@
 import client from 'apollo-client';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
   GetOrdersVariables,
@@ -13,14 +17,13 @@ import { invariant } from 'utils/invariant';
 import Modal from 'components/Modal';
 import { useState } from 'react';
 import { OrderTicket } from '../../../components/OrderTicket';
+import { z } from 'zod';
 
 type QueryParams = {
   restaurant: string;
 };
 
-interface OrdersPageProps {
-  orders: Orders;
-}
+type OrdersPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export default function OrdersPage(props: OrdersPageProps) {
   const { orders } = props;
@@ -53,16 +56,14 @@ export const getStaticPaths: GetStaticPaths<QueryParams> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  OrdersPageProps,
-  QueryParams
-> = async (context) => {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   const { locale } = context;
-  const slugWithZone = context.params?.restaurant;
-  invariant(slugWithZone, 'restaurant slug is required');
-  invariant(locale, 'locale is required');
+  const [slug] = z
+    .string()
+    .transform((it) => it.split('-'))
+    .parse(context.params?.restaurant);
 
-  const [slug] = slugWithZone.split('-');
+  invariant(locale, 'locale is required');
 
   const query = await client.query<OrdersInput, GetOrdersVariables>({
     query: GET_ORDERS,

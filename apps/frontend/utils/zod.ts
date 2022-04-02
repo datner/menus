@@ -20,5 +20,5 @@ export const extract = <T extends object>(value: Payload<T>) => ({
   ...value.data.attributes,
 });
 
-export const Locale = z.enum(['en', 'he-IL']);
+export const Locale = z.enum(['en', 'he-IL']).default('en');
 export type Locale = z.infer<typeof Locale>;

@@ -79,5 +79,6 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
       ...i18props,
       orders,
     },
+    revalidation: 10,
   };
 };

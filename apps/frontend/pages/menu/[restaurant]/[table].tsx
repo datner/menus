@@ -79,7 +79,7 @@ export const getStaticPaths: GetStaticPaths<QueryParams> = async () => {
   const paths = TablePaths.parse(query.data);
 
   return {
-    fallback: false,
+    fallback: 'blocking',
     paths,
   };
 };
@@ -88,9 +88,9 @@ const toAssets = makeAssetTransormer(menuItem);
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { locale: locale_, params } = context;
-  const { slug, table } = z
+  const { restaurant: slug, table } = z
     .object({
-      slug: z.string(),
+      restaurant: z.string(),
       table: z.string(),
     })
     .parse(params);
@@ -117,5 +117,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       restaurantWithMenu,
       table,
     },
+    revalidate: 10,
   };
 }

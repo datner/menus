@@ -40,10 +40,10 @@ export const MenuItem = memo<Props>((props) => {
   });
 
   return (
-    <animated.li className="col-span-1 p-2 relative overflow-hidden">
+    <animated.li className="relative col-span-1 overflow-hidden p-2">
       <animated.div
         style={{ opacity }}
-        className="bg-gradient-to-r pl-2 shadow-inner shadow-green-500/50 from-green-400 to-green-700 flex rtl:flex-row-reverse just items-center absolute inset-0"
+        className="just absolute inset-0 flex items-center bg-gradient-to-r from-green-400 to-green-700 pl-2 shadow-inner shadow-green-500/50 rtl:flex-row-reverse"
       >
         <span className="text-2xl text-green-900">{t('give me')}</span>
       </animated.div>
@@ -51,10 +51,10 @@ export const MenuItem = memo<Props>((props) => {
         style={{ x }}
         ref={ref}
         {...bind()}
-        className="flex-1 flex relative object-fill touch-none bg-white rounded-lg overflow-hidden shadow"
+        className="relative flex flex-1 touch-none overflow-hidden rounded-lg bg-white object-fill shadow"
       >
         <ItemData content={content} price={item.price} />
-        <div className="h-28 relative w-56 flex-shrink-0 translate-x-1/4 rtl:-translate-x-1/4">
+        <div className="relative h-28 w-56 flex-shrink-0 translate-x-1/4 rtl:-translate-x-1/4">
           <Image
             priority
             layout="fill"
@@ -62,7 +62,7 @@ export const MenuItem = memo<Props>((props) => {
             src={item.image}
             alt={content.name}
           />
-          <div className="absolute inset-y-0 -left-px right-1/2 rtl:left-1/2 rtl:-right-px bg-gradient-to-r rtl:bg-gradient-to-l from-white" />
+          <div className="absolute inset-y-0 -left-px right-1/2 bg-gradient-to-r from-white rtl:left-1/2 rtl:-right-px rtl:bg-gradient-to-l" />
         </div>
       </animated.div>
     </animated.li>

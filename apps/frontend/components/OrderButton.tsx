@@ -13,7 +13,7 @@ export function OrderButton(props: Props) {
   return (
     <animated.button
       onClick={onClick}
-      className="rounded-full active:scale-110 fixed bottom-10 right-6 shadow-amber-500/50 shadow-lg w-16 h-16 from-amber-400 to-amber-700 bg-gradient-to-br text-white"
+      className="fixed bottom-10 right-6 h-16 w-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-700 text-white shadow-lg shadow-amber-500/50 active:scale-110"
       style={styles}
     >
       {children}

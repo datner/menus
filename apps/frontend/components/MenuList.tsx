@@ -8,7 +8,7 @@ export function MenuList(props: PropsWithChildren<Props>) {
   return (
     <ul
       role="list"
-      className="grid grid-cols-1 bg-gray-50 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+      className="grid grid-cols-1 gap-6 bg-gray-50 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
     >
       {children}
     </ul>

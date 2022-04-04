@@ -20,6 +20,10 @@ const nextConfig = {
       'menus-postgres.herokuapp.com',
     ],
   },
+  webpack: (config) => {
+    config.experiments.topLevelAwait = true;
+    return config;
+  },
   i18n,
 };
 

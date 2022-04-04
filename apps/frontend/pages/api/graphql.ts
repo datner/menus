@@ -1,19 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server-micro';
 import { NextApiHandler } from 'next';
-import { $settings } from 'nexus-prisma';
-import { schema } from 'schema';
-
-$settings({
-  prismaClientContextField: 'db',
-});
+import { schema } from 'utils/schema';
 
 const apolloServer = new ApolloServer({
   schema,
   context: {
-    db: new PrismaClient(),
+    prisma: new PrismaClient(),
   },
 });
+
 const startServer = apolloServer.start();
 let apolloServerHandler: NextApiHandler;
 

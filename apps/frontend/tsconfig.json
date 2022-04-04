@@ -9,6 +9,8 @@
     "types": ["node", "jest"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

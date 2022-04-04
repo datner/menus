@@ -1,5 +1,9 @@
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Locale } from '@prisma/client';
-import { CreateOrderArgs, ItemWhereUniqueInput } from '@generated/type-graphql';
+import {
+  CreateOrderArgs,
+  OrderItemCreateManyOrderInput,
+} from '@generated/type-graphql';
 import client from 'prisma-client';
 import {
   GetStaticPaths,
@@ -14,6 +18,12 @@ import { OrderButton } from 'components/OrderButton';
 import { SEND_ORDER } from 'mutations/send-order';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { menuItem } from 'utils/cloudinary';
+import { pipe } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
+import * as O from 'monocle-ts/Optional';
+import * as T from 'monocle-ts/Traversal';
+import { cld } from 'cloudinary-config';
 
 export default function Table(
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -21,14 +31,18 @@ export default function Table(
   const { restaurant, table } = props;
   const { id, menu } = restaurant;
   const { locale } = useRouter();
-  const [items, setItems] = useState<ItemWhereUniqueInput[]>([]);
+  const [items, setItems] = useState<OrderItemCreateManyOrderInput[]>([]);
   const [sendOrder] = useMutation<never, CreateOrderArgs>(SEND_ORDER, {
     variables: {
       data: {
         table,
         identifier: `${restaurant.identifier}-${table}-${Date.now()}`,
         restaurant: { connect: { id } },
-        items: { connect: items },
+        orderItems: {
+          createMany: {
+            data: items,
+          },
+        },
       },
     },
     onCompleted() {
@@ -49,7 +63,9 @@ export default function Table(
                 key={item.id}
                 item={item}
                 content={content}
-                onOrder={({ id }) => setItems((prev) => [...prev, { id }])}
+                onOrder={({ id }) =>
+                  setItems((prev) => [...prev, { itemId: id }])
+                }
               />
             ) : null;
           })
@@ -82,8 +98,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const locales = [Locale.en, Locale.he] as const;
 
 export const getStaticProps = async (context: GetStaticPropsContext) => {
-  const restaurant = await client.restaurant.findUnique({
-    where: { slug: z.string().parse(context.params?.restaurant) },
+  const { params, locale = Locale.en } = context;
+  const raw = await client.restaurant.findUnique({
+    where: { slug: z.string().parse(params?.restaurant) },
     rejectOnNotFound: true,
     include: {
       content: true,
@@ -103,8 +120,23 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
     },
   });
 
+  const restaurant = pipe(
+    O.id<typeof raw>(),
+    O.prop('menu'),
+    O.fromNullable,
+    O.prop('categories'),
+    O.traverse(A.Traversable),
+    T.prop('items'),
+    T.traverse(A.Traversable),
+    T.prop('image'),
+    T.modify((it) => menuItem(cld.image(it)).toURL())
+  )(raw);
+
+  const i18lProps = await serverSideTranslations(locale, ['common', 'menu']);
+
   return {
     props: {
+      ...i18lProps,
       restaurant,
       table: z.string().default('general').parse(context.params?.table),
     },

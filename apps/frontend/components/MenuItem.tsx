@@ -55,13 +55,13 @@ export const MenuItem = memo<Props>((props) => {
       >
         <ItemData content={content} price={item.price} />
         <div className="h-28 relative w-56 flex-shrink-0 translate-x-1/4 rtl:-translate-x-1/4">
-          {/* <Image
+          <Image
             priority
             layout="fill"
             objectFit="cover"
             src={item.image}
             alt={content.name}
-          /> */}
+          />
           <div className="absolute inset-y-0 -left-px right-1/2 rtl:left-1/2 rtl:-right-px bg-gradient-to-r rtl:bg-gradient-to-l from-white" />
         </div>
       </animated.div>

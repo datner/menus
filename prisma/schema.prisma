@@ -68,16 +68,16 @@ model CateogryI18L {
 }
 
 model Item {
-  id         Int        @id @default(autoincrement())
-  category   Cateogry   @relation(fields: [categoryId], references: [id])
+  id         Int         @id @default(autoincrement())
+  category   Cateogry    @relation(fields: [categoryId], references: [id])
   categoryId Int
   content    ItemI18L[]
   price      Int
   identifier String
   image      String
-  items      Order[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @default(now()) @updatedAt
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @default(now()) @updatedAt
 }
 
 model ItemI18L {
@@ -90,15 +90,28 @@ model ItemI18L {
 }
 
 model Order {
-  id           Int        @id @default(autoincrement())
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  id           Int         @id @default(autoincrement())
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
   restaurantId Int
   table        String
-  identifier   String     @unique
-  items        Item[]
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now()) @updatedAt
+  fulilled     Boolean     @default(false)
+  deleted      Boolean     @default(false)
+  identifier   String      @unique
+  orderItems   OrderItem[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+}
 
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  fulilled  Boolean  @default(false)
+  deleted   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 enum Locale {

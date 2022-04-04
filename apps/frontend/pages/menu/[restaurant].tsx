@@ -1,4 +1,5 @@
 import { Locale } from '@prisma/client';
+import { CreateOrderArgs, ItemWhereUniqueInput } from '@generated/type-graphql';
 import client from 'prisma-client';
 import {
   GetStaticPaths,
@@ -10,12 +11,7 @@ import { useMutation } from '@apollo/client';
 import { MenuItem } from 'components/MenuItem';
 import { MenuList } from 'components/MenuList';
 import { OrderButton } from 'components/OrderButton';
-import {
-  CreateOrder,
-  CreateOrderResponse,
-  OrderItem,
-  SEND_ORDER,
-} from 'mutations/send-order';
+import { SEND_ORDER } from 'mutations/send-order';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -25,16 +21,20 @@ export default function Table(
   const { restaurant, table } = props;
   const { id, menu } = restaurant;
   const { locale } = useRouter();
-  const [items, setItems] = useState<OrderItem[]>([]);
-  const [sendOrder] = useMutation<CreateOrderResponse, CreateOrder>(
-    SEND_ORDER,
-    {
-      variables: { order: { items, table, restaurant: String(id) } },
-      onCompleted() {
-        setItems([]);
+  const [items, setItems] = useState<ItemWhereUniqueInput[]>([]);
+  const [sendOrder] = useMutation<never, CreateOrderArgs>(SEND_ORDER, {
+    variables: {
+      data: {
+        table,
+        identifier: `${restaurant.identifier}-${table}-${Date.now()}`,
+        restaurant: { connect: { id } },
+        items: { connect: items },
       },
-    }
-  );
+    },
+    onCompleted() {
+      setItems([]);
+    },
+  });
   const hasOrders = items.length > 0;
 
   return (
@@ -49,9 +49,7 @@ export default function Table(
                 key={item.id}
                 item={item}
                 content={content}
-                onOrder={(it) =>
-                  setItems((prev) => [...prev, OrderItem.parse(it)])
-                }
+                onOrder={({ id }) => setItems((prev) => [...prev, { id }])}
               />
             ) : null;
           })

@@ -40,6 +40,7 @@ Thumbs.db
 
 # Local Env Files
 
+.env
 .env.local
 */.env.local
 ./apps/frontend/.env.local

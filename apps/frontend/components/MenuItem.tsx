@@ -1,6 +1,6 @@
+import { Item, ItemI18L } from '@prisma/client';
 import { animated, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
-import { Item } from 'entities/menu-item';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import { memo, useRef } from 'react';
@@ -8,11 +8,12 @@ import { ItemData } from './ItemData';
 
 type Props = {
   item: Item;
+  content: ItemI18L;
   onOrder(item: Item): void;
 };
 
 export const MenuItem = memo<Props>((props) => {
-  const { item, onOrder } = props;
+  const { item, onOrder, content } = props;
   const { t } = useTranslation('menu');
   const { x, opacity } = useSpring({ x: 0, opacity: 0 });
   const ref = useRef<HTMLDivElement>(null);
@@ -38,8 +39,6 @@ export const MenuItem = memo<Props>((props) => {
     }
   });
 
-  const image = item.thumbnail;
-
   return (
     <animated.li className="col-span-1 p-2 relative overflow-hidden">
       <animated.div
@@ -54,15 +53,15 @@ export const MenuItem = memo<Props>((props) => {
         {...bind()}
         className="flex-1 flex relative object-fill touch-none bg-white rounded-lg overflow-hidden shadow"
       >
-        <ItemData item={item} />
+        <ItemData content={content} price={item.price} />
         <div className="h-28 relative w-56 flex-shrink-0 translate-x-1/4 rtl:-translate-x-1/4">
-          <Image
+          {/* <Image
             priority
             layout="fill"
             objectFit="cover"
-            src={image.url}
-            alt={item.name}
-          />
+            src={item.image}
+            alt={content.name}
+          /> */}
           <div className="absolute inset-y-0 -left-px right-1/2 rtl:left-1/2 rtl:-right-px bg-gradient-to-r rtl:bg-gradient-to-l from-white" />
         </div>
       </animated.div>

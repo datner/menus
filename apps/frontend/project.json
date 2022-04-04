@@ -29,6 +29,13 @@
         }
       }
     },
+    "nexus": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "yarn ts-node -P apps/frontend/nexus.tsconfig.json --transpile-only apps/frontend/schema",
+        "cwd": "apps/frontend"
+      }
+    },
     "export": {
       "executor": "@nrwl/next:export",
       "options": {

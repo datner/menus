@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nexusPrisma {
+  provider = "nexus-prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
+model Restaurant {
+  id         Int              @id @default(autoincrement())
+  slug       String           @unique
+  logo       String
+  identifier String           @unique
+  content    RestaurantI18L[]
+  menu       Menu?
+  order      Order[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now()) @updatedAt
+}
+
+model RestaurantI18L {
+  id           Int        @id @default(autoincrement())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  locale       Locale
+  name         String
+}
+
+model Menu {
+  id           Int        @id @default(autoincrement())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int        @unique
+  identifier   String     @unique
+  categories   Cateogry[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+}
+
+model Cateogry {
+  id         Int            @id @default(autoincrement())
+  menu       Menu           @relation(fields: [menuId], references: [id])
+  menuId     Int
+  identifier String         @unique
+  content    CateogryI18L[]
+  items      Item[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now()) @updatedAt
+}
+
+model CateogryI18L {
+  id          Int      @id @default(autoincrement())
+  category    Cateogry @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  locale      Locale
+  name        String
+  description String
+}
+
+model Item {
+  id         Int        @id @default(autoincrement())
+  category   Cateogry   @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  content    ItemI18L[]
+  price      Int
+  identifier String
+  image      String
+  items      Order[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now()) @updatedAt
+}
+
+model ItemI18L {
+  id          Int    @id @default(autoincrement())
+  item        Item   @relation(fields: [itemId], references: [id])
+  itemId      Int
+  locale      Locale
+  name        String
+  description String
+}
+
+model Order {
+  id           Int        @id @default(autoincrement())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  table        String
+  identifier   String     @unique
+  items        Item[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+
+}
+
+enum Locale {
+  en
+  he
+}

@@ -5,7 +5,7 @@ const { join } = require('path');
  **/
 module.exports = {
   i18n: {
-    locales: ['en', 'he-IL'],
+    locales: ['en', 'he', 'he-IL'],
     defaultLocale: 'en',
     localePath: join(__dirname, 'public/locales'),
   },

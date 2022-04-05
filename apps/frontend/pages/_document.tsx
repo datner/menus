@@ -16,9 +16,9 @@ class MyDocument extends Document {
     const { locale } = this.props.__NEXT_DATA__;
     const dir = locale === 'he' ? 'rtl' : 'ltr';
     return (
-      <Html lang={locale} dir={dir}>
+      <Html lang={locale} dir={dir} className="h-full bg-white">
         <Head />
-        <body>
+        <body className="h-full overflow-hidden">
           <Main />
           <NextScript />
         </body>

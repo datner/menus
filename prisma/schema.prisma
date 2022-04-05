@@ -24,7 +24,9 @@ model Restaurant {
   identifier String           @unique
   content    RestaurantI18L[]
   menu       Menu?
-  order      Order[]
+  orders     Order[]
+  categories Category[]
+  inventory  Item[]
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @default(now()) @updatedAt
 }
@@ -42,25 +44,27 @@ model Menu {
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId Int        @unique
   identifier   String     @unique
-  categories   Cateogry[]
+  categories   Category[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt
 }
 
-model Cateogry {
-  id         Int            @id @default(autoincrement())
-  menu       Menu           @relation(fields: [menuId], references: [id])
-  menuId     Int
-  identifier String         @unique
-  content    CateogryI18L[]
-  items      Item[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @default(now()) @updatedAt
+model Category {
+  id           Int            @id @default(autoincrement())
+  menu         Menu           @relation(fields: [menuId], references: [id])
+  menuId       Int
+  restaurant   Restaurant     @relation(fields: [restaurantId], references: [id])
+  restaurantId Int            @unique
+  identifier   String         @unique
+  content      CategoryI18L[]
+  items        Item[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
 }
 
-model CateogryI18L {
+model CategoryI18L {
   id          Int      @id @default(autoincrement())
-  category    Cateogry @relation(fields: [categoryId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
   categoryId  Int
   locale      Locale
   name        String
@@ -68,16 +72,18 @@ model CateogryI18L {
 }
 
 model Item {
-  id         Int         @id @default(autoincrement())
-  category   Cateogry    @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  content    ItemI18L[]
-  price      Int
-  identifier String
-  image      String
-  orderItems OrderItem[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @default(now()) @updatedAt
+  id           Int         @id @default(autoincrement())
+  price        Int
+  identifier   String
+  image        String
+  content      ItemI18L[]
+  orderItems   OrderItem[]
+  category     Category    @relation(fields: [categoryId], references: [id])
+  categoryId   Int
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  restaurantId Int         @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
 }
 
 model ItemI18L {

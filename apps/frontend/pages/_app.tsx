@@ -16,9 +16,7 @@ function CustomApp({ Component, pageProps, router }: AppProps) {
       <Head>
         <title>Welcome to frontend!</title>
       </Head>
-      <main className="app">
-        <Component {...pageProps} />
-      </main>
+      <Component {...pageProps} />
       <ToastContainer
         position="bottom-right"
         autoClose={3000}

@@ -5,3 +5,7 @@
 html {
   @apply bg-gray-50;
 }
+
+#__next {
+  @apply h-full;
+}

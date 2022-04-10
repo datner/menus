@@ -4,8 +4,8 @@ import { Category } from '@generated/type-graphql';
 import { useRouter } from 'next/router';
 
 const GET_ALL_CATEGORIES = gql`
-  query getAllCategories($restaurantId: Int) {
-    cateogries(where: { restaurantId: $restaurantId }) {
+  query getAllCategories($slug: String) {
+    cateogries(where: { restaurant: { is: { slug: { equals: $slug } } } }) {
       content {
         name
         description

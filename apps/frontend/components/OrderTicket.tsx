@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
-import { Order } from 'queries/get-orders';
+import { Order } from '../queries/get-orders';
 import Image from 'next/image';
-import { Item } from 'entities/menu-item';
+import { Item } from '../entities/menu-item';
 
 interface OrderTiketProps {
   order: Order;

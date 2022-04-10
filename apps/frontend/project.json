@@ -32,7 +32,7 @@
     "nexus": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "yarn ts-node -P apps/frontend/nexus.tsconfig.json --transpile-only apps/frontend/schema",
+        "command": "yarn ts-node -P apps/frontend/nexus.tsconfig.json --transpile-only apps/frontend/utils/schema",
         "cwd": "apps/frontend"
       }
     },

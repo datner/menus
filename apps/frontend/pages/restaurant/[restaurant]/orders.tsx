@@ -1,4 +1,4 @@
-import client from 'apollo-client';
+import client from '../../../apollo-client';
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -11,10 +11,10 @@ import {
   Order,
   Orders,
   OrdersInput,
-} from 'queries/get-orders';
-import { GET_PATHS, Paths, PathsInput } from 'queries/get-paths';
-import { invariant } from 'utils/invariant';
-import Modal from 'components/Modal';
+} from '../../../queries/get-orders';
+import { GET_PATHS, Paths, PathsInput } from '../../../queries/get-paths';
+import { invariant } from '../../../utils/invariant';
+import Modal from '../../../components/Modal';
 import { useState } from 'react';
 import { OrderTicket } from '../../../components/OrderTicket';
 import { z } from 'zod';
@@ -30,7 +30,7 @@ export default function OrdersPage(props: OrdersPageProps) {
   const [order, setOrder] = useState<Order | null>(null);
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 p-2 max-w-md mx-auto">
+      <div className="mx-auto grid max-w-md grid-cols-1 gap-4 p-2">
         {orders.map((order) => (
           <OrderTicket
             key={order.id}

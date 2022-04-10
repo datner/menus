@@ -1,9 +1,9 @@
 import { CloudinaryImage } from '@cloudinary/url-gen';
 import { fill } from '@cloudinary/url-gen/actions/resize';
-import { cld } from 'cloudinary-config';
+import { cld } from '../cloudinary-config';
 import { pipe } from 'fp-ts/function';
 import * as T from 'monocle-ts/Traversal';
-import { thumbnail } from 'optics/thumbnail';
+import { thumbnail } from '../optics/thumbnail';
 
 export type CloudinaryConfigure = (image: CloudinaryImage) => CloudinaryImage;
 

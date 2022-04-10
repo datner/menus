@@ -7,20 +7,20 @@ type AffectedRowsOutput {
   count: Int!
 }
 
-type AggregateCateogry {
-  _avg: CateogryAvgAggregate
-  _count: CateogryCountAggregate
-  _max: CateogryMaxAggregate
-  _min: CateogryMinAggregate
-  _sum: CateogrySumAggregate
+type AggregateCategory {
+  _avg: CategoryAvgAggregate
+  _count: CategoryCountAggregate
+  _max: CategoryMaxAggregate
+  _min: CategoryMinAggregate
+  _sum: CategorySumAggregate
 }
 
-type AggregateCateogryI18L {
-  _avg: CateogryI18LAvgAggregate
-  _count: CateogryI18LCountAggregate
-  _max: CateogryI18LMaxAggregate
-  _min: CateogryI18LMinAggregate
-  _sum: CateogryI18LSumAggregate
+type AggregateCategoryI18L {
+  _avg: CategoryI18LAvgAggregate
+  _count: CategoryI18LCountAggregate
+  _max: CategoryI18LMaxAggregate
+  _min: CategoryI18LMinAggregate
+  _sum: CategoryI18LSumAggregate
 }
 
 type AggregateItem {
@@ -55,6 +55,14 @@ type AggregateOrder {
   _sum: OrderSumAggregate
 }
 
+type AggregateOrderItem {
+  _avg: OrderItemAvgAggregate
+  _count: OrderItemCountAggregate
+  _max: OrderItemMaxAggregate
+  _min: OrderItemMinAggregate
+  _sum: OrderItemSumAggregate
+}
+
 type AggregateRestaurant {
   _avg: RestaurantAvgAggregate
   _count: RestaurantCountAggregate
@@ -79,170 +87,234 @@ type AggregateUser {
   _sum: UserSumAggregate
 }
 
-type Cateogry {
-  _count: CateogryCount
-  content(cursor: CateogryI18LWhereUniqueInput, distinct: [CateogryI18LScalarFieldEnum!], orderBy: [CateogryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryI18LWhereInput): [CateogryI18L!]!
+input BoolFieldUpdateOperationsInput {
+  set: Boolean
+}
+
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input BoolWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedBoolFilter
+  _min: NestedBoolFilter
+  equals: Boolean
+  not: NestedBoolWithAggregatesFilter
+}
+
+type Category {
+  _count: CategoryCount
+  content(cursor: CategoryI18LWhereUniqueInput, distinct: [CategoryI18LScalarFieldEnum!], orderBy: [CategoryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryI18LWhereInput): [CategoryI18L!]!
   createdAt: DateTime!
   id: Int!
   identifier: String!
   items(cursor: ItemWhereUniqueInput, distinct: [ItemScalarFieldEnum!], orderBy: [ItemOrderByWithRelationInput!], skip: Int, take: Int, where: ItemWhereInput): [Item!]!
-  menu: Menu!
-  menuId: Int!
+  menu: Menu
+  menuId: Int
+  restaurant: Restaurant!
+  restaurantId: Int!
   updatedAt: DateTime!
 }
 
-type CateogryAvgAggregate {
+type CategoryAvgAggregate {
   id: Float
   menuId: Float
+  restaurantId: Float
 }
 
-input CateogryAvgOrderByAggregateInput {
+input CategoryAvgOrderByAggregateInput {
   id: SortOrder
   menuId: SortOrder
+  restaurantId: SortOrder
 }
 
-type CateogryCount {
+type CategoryCount {
   content: Int!
   items: Int!
 }
 
-type CateogryCountAggregate {
+type CategoryCountAggregate {
   _all: Int!
   createdAt: Int!
   id: Int!
   identifier: Int!
   menuId: Int!
+  restaurantId: Int!
   updatedAt: Int!
 }
 
-input CateogryCountOrderByAggregateInput {
+input CategoryCountOrderByAggregateInput {
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
   menuId: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
-input CateogryCreateInput {
-  content: CateogryI18LCreateNestedManyWithoutCategoryInput
+input CategoryCreateInput {
+  content: CategoryI18LCreateNestedManyWithoutCategoryInput
   createdAt: DateTime
   identifier: String!
   items: ItemCreateNestedManyWithoutCategoryInput
-  menu: MenuCreateNestedOneWithoutCategoriesInput!
+  menu: MenuCreateNestedOneWithoutCategoriesInput
+  restaurant: RestaurantCreateNestedOneWithoutCategoriesInput!
   updatedAt: DateTime
 }
 
-input CateogryCreateManyInput {
+input CategoryCreateManyInput {
   createdAt: DateTime
   id: Int
   identifier: String!
-  menuId: Int!
+  menuId: Int
+  restaurantId: Int!
   updatedAt: DateTime
 }
 
-input CateogryCreateManyMenuInput {
+input CategoryCreateManyMenuInput {
   createdAt: DateTime
   id: Int
   identifier: String!
+  restaurantId: Int!
   updatedAt: DateTime
 }
 
-input CateogryCreateManyMenuInputEnvelope {
-  data: [CateogryCreateManyMenuInput!]!
+input CategoryCreateManyMenuInputEnvelope {
+  data: [CategoryCreateManyMenuInput!]!
   skipDuplicates: Boolean
 }
 
-input CateogryCreateNestedManyWithoutMenuInput {
-  connect: [CateogryWhereUniqueInput!]
-  connectOrCreate: [CateogryCreateOrConnectWithoutMenuInput!]
-  create: [CateogryCreateWithoutMenuInput!]
-  createMany: CateogryCreateManyMenuInputEnvelope
+input CategoryCreateManyRestaurantInput {
+  createdAt: DateTime
+  id: Int
+  identifier: String!
+  menuId: Int
+  updatedAt: DateTime
 }
 
-input CateogryCreateNestedOneWithoutContentInput {
-  connect: CateogryWhereUniqueInput
-  connectOrCreate: CateogryCreateOrConnectWithoutContentInput
-  create: CateogryCreateWithoutContentInput
+input CategoryCreateManyRestaurantInputEnvelope {
+  data: [CategoryCreateManyRestaurantInput!]!
+  skipDuplicates: Boolean
 }
 
-input CateogryCreateNestedOneWithoutItemsInput {
-  connect: CateogryWhereUniqueInput
-  connectOrCreate: CateogryCreateOrConnectWithoutItemsInput
-  create: CateogryCreateWithoutItemsInput
+input CategoryCreateNestedManyWithoutMenuInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutMenuInput!]
+  create: [CategoryCreateWithoutMenuInput!]
+  createMany: CategoryCreateManyMenuInputEnvelope
 }
 
-input CateogryCreateOrConnectWithoutContentInput {
-  create: CateogryCreateWithoutContentInput!
-  where: CateogryWhereUniqueInput!
+input CategoryCreateNestedManyWithoutRestaurantInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutRestaurantInput!]
+  create: [CategoryCreateWithoutRestaurantInput!]
+  createMany: CategoryCreateManyRestaurantInputEnvelope
 }
 
-input CateogryCreateOrConnectWithoutItemsInput {
-  create: CateogryCreateWithoutItemsInput!
-  where: CateogryWhereUniqueInput!
+input CategoryCreateNestedOneWithoutContentInput {
+  connect: CategoryWhereUniqueInput
+  connectOrCreate: CategoryCreateOrConnectWithoutContentInput
+  create: CategoryCreateWithoutContentInput
 }
 
-input CateogryCreateOrConnectWithoutMenuInput {
-  create: CateogryCreateWithoutMenuInput!
-  where: CateogryWhereUniqueInput!
+input CategoryCreateNestedOneWithoutItemsInput {
+  connect: CategoryWhereUniqueInput
+  connectOrCreate: CategoryCreateOrConnectWithoutItemsInput
+  create: CategoryCreateWithoutItemsInput
 }
 
-input CateogryCreateWithoutContentInput {
+input CategoryCreateOrConnectWithoutContentInput {
+  create: CategoryCreateWithoutContentInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryCreateOrConnectWithoutItemsInput {
+  create: CategoryCreateWithoutItemsInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryCreateOrConnectWithoutMenuInput {
+  create: CategoryCreateWithoutMenuInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryCreateOrConnectWithoutRestaurantInput {
+  create: CategoryCreateWithoutRestaurantInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryCreateWithoutContentInput {
   createdAt: DateTime
   identifier: String!
   items: ItemCreateNestedManyWithoutCategoryInput
-  menu: MenuCreateNestedOneWithoutCategoriesInput!
+  menu: MenuCreateNestedOneWithoutCategoriesInput
+  restaurant: RestaurantCreateNestedOneWithoutCategoriesInput!
   updatedAt: DateTime
 }
 
-input CateogryCreateWithoutItemsInput {
-  content: CateogryI18LCreateNestedManyWithoutCategoryInput
+input CategoryCreateWithoutItemsInput {
+  content: CategoryI18LCreateNestedManyWithoutCategoryInput
   createdAt: DateTime
   identifier: String!
-  menu: MenuCreateNestedOneWithoutCategoriesInput!
+  menu: MenuCreateNestedOneWithoutCategoriesInput
+  restaurant: RestaurantCreateNestedOneWithoutCategoriesInput!
   updatedAt: DateTime
 }
 
-input CateogryCreateWithoutMenuInput {
-  content: CateogryI18LCreateNestedManyWithoutCategoryInput
+input CategoryCreateWithoutMenuInput {
+  content: CategoryI18LCreateNestedManyWithoutCategoryInput
   createdAt: DateTime
   identifier: String!
   items: ItemCreateNestedManyWithoutCategoryInput
+  restaurant: RestaurantCreateNestedOneWithoutCategoriesInput!
   updatedAt: DateTime
 }
 
-type CateogryGroupBy {
-  _avg: CateogryAvgAggregate
-  _count: CateogryCountAggregate
-  _max: CateogryMaxAggregate
-  _min: CateogryMinAggregate
-  _sum: CateogrySumAggregate
+input CategoryCreateWithoutRestaurantInput {
+  content: CategoryI18LCreateNestedManyWithoutCategoryInput
+  createdAt: DateTime
+  identifier: String!
+  items: ItemCreateNestedManyWithoutCategoryInput
+  menu: MenuCreateNestedOneWithoutCategoriesInput
+  updatedAt: DateTime
+}
+
+type CategoryGroupBy {
+  _avg: CategoryAvgAggregate
+  _count: CategoryCountAggregate
+  _max: CategoryMaxAggregate
+  _min: CategoryMinAggregate
+  _sum: CategorySumAggregate
   createdAt: DateTime!
   id: Int!
   identifier: String!
-  menuId: Int!
+  menuId: Int
+  restaurantId: Int!
   updatedAt: DateTime!
 }
 
-type CateogryI18L {
-  category: Cateogry!
+type CategoryI18L {
+  category: Category!
   categoryId: Int!
-  description: String!
+  description: String
   id: Int!
   locale: Locale!
   name: String!
 }
 
-type CateogryI18LAvgAggregate {
+type CategoryI18LAvgAggregate {
   categoryId: Float
   id: Float
 }
 
-input CateogryI18LAvgOrderByAggregateInput {
+input CategoryI18LAvgOrderByAggregateInput {
   categoryId: SortOrder
   id: SortOrder
 }
 
-type CateogryI18LCountAggregate {
+type CategoryI18LCountAggregate {
   _all: Int!
   categoryId: Int!
   description: Int!
@@ -251,7 +323,7 @@ type CateogryI18LCountAggregate {
   name: Int!
 }
 
-input CateogryI18LCountOrderByAggregateInput {
+input CategoryI18LCountOrderByAggregateInput {
   categoryId: SortOrder
   description: SortOrder
   id: SortOrder
@@ -259,71 +331,71 @@ input CateogryI18LCountOrderByAggregateInput {
   name: SortOrder
 }
 
-input CateogryI18LCreateInput {
-  category: CateogryCreateNestedOneWithoutContentInput!
-  description: String!
+input CategoryI18LCreateInput {
+  category: CategoryCreateNestedOneWithoutContentInput!
+  description: String
   locale: Locale!
   name: String!
 }
 
-input CateogryI18LCreateManyCategoryInput {
-  description: String!
+input CategoryI18LCreateManyCategoryInput {
+  description: String
   id: Int
   locale: Locale!
   name: String!
 }
 
-input CateogryI18LCreateManyCategoryInputEnvelope {
-  data: [CateogryI18LCreateManyCategoryInput!]!
+input CategoryI18LCreateManyCategoryInputEnvelope {
+  data: [CategoryI18LCreateManyCategoryInput!]!
   skipDuplicates: Boolean
 }
 
-input CateogryI18LCreateManyInput {
+input CategoryI18LCreateManyInput {
   categoryId: Int!
-  description: String!
+  description: String
   id: Int
   locale: Locale!
   name: String!
 }
 
-input CateogryI18LCreateNestedManyWithoutCategoryInput {
-  connect: [CateogryI18LWhereUniqueInput!]
-  connectOrCreate: [CateogryI18LCreateOrConnectWithoutCategoryInput!]
-  create: [CateogryI18LCreateWithoutCategoryInput!]
-  createMany: CateogryI18LCreateManyCategoryInputEnvelope
+input CategoryI18LCreateNestedManyWithoutCategoryInput {
+  connect: [CategoryI18LWhereUniqueInput!]
+  connectOrCreate: [CategoryI18LCreateOrConnectWithoutCategoryInput!]
+  create: [CategoryI18LCreateWithoutCategoryInput!]
+  createMany: CategoryI18LCreateManyCategoryInputEnvelope
 }
 
-input CateogryI18LCreateOrConnectWithoutCategoryInput {
-  create: CateogryI18LCreateWithoutCategoryInput!
-  where: CateogryI18LWhereUniqueInput!
+input CategoryI18LCreateOrConnectWithoutCategoryInput {
+  create: CategoryI18LCreateWithoutCategoryInput!
+  where: CategoryI18LWhereUniqueInput!
 }
 
-input CateogryI18LCreateWithoutCategoryInput {
-  description: String!
+input CategoryI18LCreateWithoutCategoryInput {
+  description: String
   locale: Locale!
   name: String!
 }
 
-type CateogryI18LGroupBy {
-  _avg: CateogryI18LAvgAggregate
-  _count: CateogryI18LCountAggregate
-  _max: CateogryI18LMaxAggregate
-  _min: CateogryI18LMinAggregate
-  _sum: CateogryI18LSumAggregate
+type CategoryI18LGroupBy {
+  _avg: CategoryI18LAvgAggregate
+  _count: CategoryI18LCountAggregate
+  _max: CategoryI18LMaxAggregate
+  _min: CategoryI18LMinAggregate
+  _sum: CategoryI18LSumAggregate
   categoryId: Int!
-  description: String!
+  description: String
   id: Int!
   locale: Locale!
   name: String!
 }
 
-input CateogryI18LListRelationFilter {
-  every: CateogryI18LWhereInput
-  none: CateogryI18LWhereInput
-  some: CateogryI18LWhereInput
+input CategoryI18LListRelationFilter {
+  every: CategoryI18LWhereInput
+  none: CategoryI18LWhereInput
+  some: CategoryI18LWhereInput
 }
 
-type CateogryI18LMaxAggregate {
+type CategoryI18LMaxAggregate {
   categoryId: Int
   description: String
   id: Int
@@ -331,7 +403,7 @@ type CateogryI18LMaxAggregate {
   name: String
 }
 
-input CateogryI18LMaxOrderByAggregateInput {
+input CategoryI18LMaxOrderByAggregateInput {
   categoryId: SortOrder
   description: SortOrder
   id: SortOrder
@@ -339,7 +411,7 @@ input CateogryI18LMaxOrderByAggregateInput {
   name: SortOrder
 }
 
-type CateogryI18LMinAggregate {
+type CategoryI18LMinAggregate {
   categoryId: Int
   description: String
   id: Int
@@ -347,7 +419,7 @@ type CateogryI18LMinAggregate {
   name: String
 }
 
-input CateogryI18LMinOrderByAggregateInput {
+input CategoryI18LMinOrderByAggregateInput {
   categoryId: SortOrder
   description: SortOrder
   id: SortOrder
@@ -355,16 +427,16 @@ input CateogryI18LMinOrderByAggregateInput {
   name: SortOrder
 }
 
-input CateogryI18LOrderByRelationAggregateInput {
+input CategoryI18LOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-input CateogryI18LOrderByWithAggregationInput {
-  _avg: CateogryI18LAvgOrderByAggregateInput
-  _count: CateogryI18LCountOrderByAggregateInput
-  _max: CateogryI18LMaxOrderByAggregateInput
-  _min: CateogryI18LMinOrderByAggregateInput
-  _sum: CateogryI18LSumOrderByAggregateInput
+input CategoryI18LOrderByWithAggregationInput {
+  _avg: CategoryI18LAvgOrderByAggregateInput
+  _count: CategoryI18LCountOrderByAggregateInput
+  _max: CategoryI18LMaxOrderByAggregateInput
+  _min: CategoryI18LMinOrderByAggregateInput
+  _sum: CategoryI18LSumOrderByAggregateInput
   categoryId: SortOrder
   description: SortOrder
   id: SortOrder
@@ -372,8 +444,8 @@ input CateogryI18LOrderByWithAggregationInput {
   name: SortOrder
 }
 
-input CateogryI18LOrderByWithRelationInput {
-  category: CateogryOrderByWithRelationInput
+input CategoryI18LOrderByWithRelationInput {
+  category: CategoryOrderByWithRelationInput
   categoryId: SortOrder
   description: SortOrder
   id: SortOrder
@@ -381,7 +453,7 @@ input CateogryI18LOrderByWithRelationInput {
   name: SortOrder
 }
 
-enum CateogryI18LScalarFieldEnum {
+enum CategoryI18LScalarFieldEnum {
   categoryId
   description
   id
@@ -389,324 +461,381 @@ enum CateogryI18LScalarFieldEnum {
   name
 }
 
-input CateogryI18LScalarWhereInput {
-  AND: [CateogryI18LScalarWhereInput!]
-  NOT: [CateogryI18LScalarWhereInput!]
-  OR: [CateogryI18LScalarWhereInput!]
+input CategoryI18LScalarWhereInput {
+  AND: [CategoryI18LScalarWhereInput!]
+  NOT: [CategoryI18LScalarWhereInput!]
+  OR: [CategoryI18LScalarWhereInput!]
   categoryId: IntFilter
-  description: StringFilter
+  description: StringNullableFilter
   id: IntFilter
   locale: EnumLocaleFilter
   name: StringFilter
 }
 
-input CateogryI18LScalarWhereWithAggregatesInput {
-  AND: [CateogryI18LScalarWhereWithAggregatesInput!]
-  NOT: [CateogryI18LScalarWhereWithAggregatesInput!]
-  OR: [CateogryI18LScalarWhereWithAggregatesInput!]
+input CategoryI18LScalarWhereWithAggregatesInput {
+  AND: [CategoryI18LScalarWhereWithAggregatesInput!]
+  NOT: [CategoryI18LScalarWhereWithAggregatesInput!]
+  OR: [CategoryI18LScalarWhereWithAggregatesInput!]
   categoryId: IntWithAggregatesFilter
-  description: StringWithAggregatesFilter
+  description: StringNullableWithAggregatesFilter
   id: IntWithAggregatesFilter
   locale: EnumLocaleWithAggregatesFilter
   name: StringWithAggregatesFilter
 }
 
-type CateogryI18LSumAggregate {
+type CategoryI18LSumAggregate {
   categoryId: Int
   id: Int
 }
 
-input CateogryI18LSumOrderByAggregateInput {
+input CategoryI18LSumOrderByAggregateInput {
   categoryId: SortOrder
   id: SortOrder
 }
 
-input CateogryI18LUpdateInput {
-  category: CateogryUpdateOneRequiredWithoutContentInput
-  description: StringFieldUpdateOperationsInput
+input CategoryI18LUpdateInput {
+  category: CategoryUpdateOneRequiredWithoutContentInput
+  description: NullableStringFieldUpdateOperationsInput
   locale: EnumLocaleFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
 }
 
-input CateogryI18LUpdateManyMutationInput {
-  description: StringFieldUpdateOperationsInput
+input CategoryI18LUpdateManyMutationInput {
+  description: NullableStringFieldUpdateOperationsInput
   locale: EnumLocaleFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
 }
 
-input CateogryI18LUpdateManyWithWhereWithoutCategoryInput {
-  data: CateogryI18LUpdateManyMutationInput!
-  where: CateogryI18LScalarWhereInput!
+input CategoryI18LUpdateManyWithWhereWithoutCategoryInput {
+  data: CategoryI18LUpdateManyMutationInput!
+  where: CategoryI18LScalarWhereInput!
 }
 
-input CateogryI18LUpdateManyWithoutCategoryInput {
-  connect: [CateogryI18LWhereUniqueInput!]
-  connectOrCreate: [CateogryI18LCreateOrConnectWithoutCategoryInput!]
-  create: [CateogryI18LCreateWithoutCategoryInput!]
-  createMany: CateogryI18LCreateManyCategoryInputEnvelope
-  delete: [CateogryI18LWhereUniqueInput!]
-  deleteMany: [CateogryI18LScalarWhereInput!]
-  disconnect: [CateogryI18LWhereUniqueInput!]
-  set: [CateogryI18LWhereUniqueInput!]
-  update: [CateogryI18LUpdateWithWhereUniqueWithoutCategoryInput!]
-  updateMany: [CateogryI18LUpdateManyWithWhereWithoutCategoryInput!]
-  upsert: [CateogryI18LUpsertWithWhereUniqueWithoutCategoryInput!]
+input CategoryI18LUpdateManyWithoutCategoryInput {
+  connect: [CategoryI18LWhereUniqueInput!]
+  connectOrCreate: [CategoryI18LCreateOrConnectWithoutCategoryInput!]
+  create: [CategoryI18LCreateWithoutCategoryInput!]
+  createMany: CategoryI18LCreateManyCategoryInputEnvelope
+  delete: [CategoryI18LWhereUniqueInput!]
+  deleteMany: [CategoryI18LScalarWhereInput!]
+  disconnect: [CategoryI18LWhereUniqueInput!]
+  set: [CategoryI18LWhereUniqueInput!]
+  update: [CategoryI18LUpdateWithWhereUniqueWithoutCategoryInput!]
+  updateMany: [CategoryI18LUpdateManyWithWhereWithoutCategoryInput!]
+  upsert: [CategoryI18LUpsertWithWhereUniqueWithoutCategoryInput!]
 }
 
-input CateogryI18LUpdateWithWhereUniqueWithoutCategoryInput {
-  data: CateogryI18LUpdateWithoutCategoryInput!
-  where: CateogryI18LWhereUniqueInput!
+input CategoryI18LUpdateWithWhereUniqueWithoutCategoryInput {
+  data: CategoryI18LUpdateWithoutCategoryInput!
+  where: CategoryI18LWhereUniqueInput!
 }
 
-input CateogryI18LUpdateWithoutCategoryInput {
-  description: StringFieldUpdateOperationsInput
+input CategoryI18LUpdateWithoutCategoryInput {
+  description: NullableStringFieldUpdateOperationsInput
   locale: EnumLocaleFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
 }
 
-input CateogryI18LUpsertWithWhereUniqueWithoutCategoryInput {
-  create: CateogryI18LCreateWithoutCategoryInput!
-  update: CateogryI18LUpdateWithoutCategoryInput!
-  where: CateogryI18LWhereUniqueInput!
+input CategoryI18LUpsertWithWhereUniqueWithoutCategoryInput {
+  create: CategoryI18LCreateWithoutCategoryInput!
+  update: CategoryI18LUpdateWithoutCategoryInput!
+  where: CategoryI18LWhereUniqueInput!
 }
 
-input CateogryI18LWhereInput {
-  AND: [CateogryI18LWhereInput!]
-  NOT: [CateogryI18LWhereInput!]
-  OR: [CateogryI18LWhereInput!]
-  category: CateogryRelationFilter
+input CategoryI18LWhereInput {
+  AND: [CategoryI18LWhereInput!]
+  NOT: [CategoryI18LWhereInput!]
+  OR: [CategoryI18LWhereInput!]
+  category: CategoryRelationFilter
   categoryId: IntFilter
-  description: StringFilter
+  description: StringNullableFilter
   id: IntFilter
   locale: EnumLocaleFilter
   name: StringFilter
 }
 
-input CateogryI18LWhereUniqueInput {
+input CategoryI18LWhereUniqueInput {
   id: Int
 }
 
-input CateogryListRelationFilter {
-  every: CateogryWhereInput
-  none: CateogryWhereInput
-  some: CateogryWhereInput
+input CategoryListRelationFilter {
+  every: CategoryWhereInput
+  none: CategoryWhereInput
+  some: CategoryWhereInput
 }
 
-type CateogryMaxAggregate {
+type CategoryMaxAggregate {
   createdAt: DateTime
   id: Int
   identifier: String
   menuId: Int
+  restaurantId: Int
   updatedAt: DateTime
 }
 
-input CateogryMaxOrderByAggregateInput {
+input CategoryMaxOrderByAggregateInput {
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
   menuId: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
-type CateogryMinAggregate {
+type CategoryMinAggregate {
   createdAt: DateTime
   id: Int
   identifier: String
   menuId: Int
+  restaurantId: Int
   updatedAt: DateTime
 }
 
-input CateogryMinOrderByAggregateInput {
+input CategoryMinOrderByAggregateInput {
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
   menuId: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
-input CateogryOrderByRelationAggregateInput {
+input CategoryOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-input CateogryOrderByWithAggregationInput {
-  _avg: CateogryAvgOrderByAggregateInput
-  _count: CateogryCountOrderByAggregateInput
-  _max: CateogryMaxOrderByAggregateInput
-  _min: CateogryMinOrderByAggregateInput
-  _sum: CateogrySumOrderByAggregateInput
+input CategoryOrderByWithAggregationInput {
+  _avg: CategoryAvgOrderByAggregateInput
+  _count: CategoryCountOrderByAggregateInput
+  _max: CategoryMaxOrderByAggregateInput
+  _min: CategoryMinOrderByAggregateInput
+  _sum: CategorySumOrderByAggregateInput
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
   menuId: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
-input CateogryOrderByWithRelationInput {
-  content: CateogryI18LOrderByRelationAggregateInput
+input CategoryOrderByWithRelationInput {
+  content: CategoryI18LOrderByRelationAggregateInput
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
   items: ItemOrderByRelationAggregateInput
   menu: MenuOrderByWithRelationInput
   menuId: SortOrder
+  restaurant: RestaurantOrderByWithRelationInput
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
-input CateogryRelationFilter {
-  is: CateogryWhereInput
-  isNot: CateogryWhereInput
+input CategoryRelationFilter {
+  is: CategoryWhereInput
+  isNot: CategoryWhereInput
 }
 
-enum CateogryScalarFieldEnum {
+enum CategoryScalarFieldEnum {
   createdAt
   id
   identifier
   menuId
+  restaurantId
   updatedAt
 }
 
-input CateogryScalarWhereInput {
-  AND: [CateogryScalarWhereInput!]
-  NOT: [CateogryScalarWhereInput!]
-  OR: [CateogryScalarWhereInput!]
+input CategoryScalarWhereInput {
+  AND: [CategoryScalarWhereInput!]
+  NOT: [CategoryScalarWhereInput!]
+  OR: [CategoryScalarWhereInput!]
   createdAt: DateTimeFilter
   id: IntFilter
   identifier: StringFilter
-  menuId: IntFilter
+  menuId: IntNullableFilter
+  restaurantId: IntFilter
   updatedAt: DateTimeFilter
 }
 
-input CateogryScalarWhereWithAggregatesInput {
-  AND: [CateogryScalarWhereWithAggregatesInput!]
-  NOT: [CateogryScalarWhereWithAggregatesInput!]
-  OR: [CateogryScalarWhereWithAggregatesInput!]
+input CategoryScalarWhereWithAggregatesInput {
+  AND: [CategoryScalarWhereWithAggregatesInput!]
+  NOT: [CategoryScalarWhereWithAggregatesInput!]
+  OR: [CategoryScalarWhereWithAggregatesInput!]
   createdAt: DateTimeWithAggregatesFilter
   id: IntWithAggregatesFilter
   identifier: StringWithAggregatesFilter
-  menuId: IntWithAggregatesFilter
+  menuId: IntNullableWithAggregatesFilter
+  restaurantId: IntWithAggregatesFilter
   updatedAt: DateTimeWithAggregatesFilter
 }
 
-type CateogrySumAggregate {
+type CategorySumAggregate {
   id: Int
   menuId: Int
+  restaurantId: Int
 }
 
-input CateogrySumOrderByAggregateInput {
+input CategorySumOrderByAggregateInput {
   id: SortOrder
   menuId: SortOrder
+  restaurantId: SortOrder
 }
 
-input CateogryUpdateInput {
-  content: CateogryI18LUpdateManyWithoutCategoryInput
+input CategoryUpdateInput {
+  content: CategoryI18LUpdateManyWithoutCategoryInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   items: ItemUpdateManyWithoutCategoryInput
-  menu: MenuUpdateOneRequiredWithoutCategoriesInput
+  menu: MenuUpdateOneWithoutCategoriesInput
+  restaurant: RestaurantUpdateOneRequiredWithoutCategoriesInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input CateogryUpdateManyMutationInput {
+input CategoryUpdateManyMutationInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input CateogryUpdateManyWithWhereWithoutMenuInput {
-  data: CateogryUpdateManyMutationInput!
-  where: CateogryScalarWhereInput!
+input CategoryUpdateManyWithWhereWithoutMenuInput {
+  data: CategoryUpdateManyMutationInput!
+  where: CategoryScalarWhereInput!
 }
 
-input CateogryUpdateManyWithoutMenuInput {
-  connect: [CateogryWhereUniqueInput!]
-  connectOrCreate: [CateogryCreateOrConnectWithoutMenuInput!]
-  create: [CateogryCreateWithoutMenuInput!]
-  createMany: CateogryCreateManyMenuInputEnvelope
-  delete: [CateogryWhereUniqueInput!]
-  deleteMany: [CateogryScalarWhereInput!]
-  disconnect: [CateogryWhereUniqueInput!]
-  set: [CateogryWhereUniqueInput!]
-  update: [CateogryUpdateWithWhereUniqueWithoutMenuInput!]
-  updateMany: [CateogryUpdateManyWithWhereWithoutMenuInput!]
-  upsert: [CateogryUpsertWithWhereUniqueWithoutMenuInput!]
+input CategoryUpdateManyWithWhereWithoutRestaurantInput {
+  data: CategoryUpdateManyMutationInput!
+  where: CategoryScalarWhereInput!
 }
 
-input CateogryUpdateOneRequiredWithoutContentInput {
-  connect: CateogryWhereUniqueInput
-  connectOrCreate: CateogryCreateOrConnectWithoutContentInput
-  create: CateogryCreateWithoutContentInput
-  update: CateogryUpdateWithoutContentInput
-  upsert: CateogryUpsertWithoutContentInput
+input CategoryUpdateManyWithoutMenuInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutMenuInput!]
+  create: [CategoryCreateWithoutMenuInput!]
+  createMany: CategoryCreateManyMenuInputEnvelope
+  delete: [CategoryWhereUniqueInput!]
+  deleteMany: [CategoryScalarWhereInput!]
+  disconnect: [CategoryWhereUniqueInput!]
+  set: [CategoryWhereUniqueInput!]
+  update: [CategoryUpdateWithWhereUniqueWithoutMenuInput!]
+  updateMany: [CategoryUpdateManyWithWhereWithoutMenuInput!]
+  upsert: [CategoryUpsertWithWhereUniqueWithoutMenuInput!]
 }
 
-input CateogryUpdateOneRequiredWithoutItemsInput {
-  connect: CateogryWhereUniqueInput
-  connectOrCreate: CateogryCreateOrConnectWithoutItemsInput
-  create: CateogryCreateWithoutItemsInput
-  update: CateogryUpdateWithoutItemsInput
-  upsert: CateogryUpsertWithoutItemsInput
+input CategoryUpdateManyWithoutRestaurantInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutRestaurantInput!]
+  create: [CategoryCreateWithoutRestaurantInput!]
+  createMany: CategoryCreateManyRestaurantInputEnvelope
+  delete: [CategoryWhereUniqueInput!]
+  deleteMany: [CategoryScalarWhereInput!]
+  disconnect: [CategoryWhereUniqueInput!]
+  set: [CategoryWhereUniqueInput!]
+  update: [CategoryUpdateWithWhereUniqueWithoutRestaurantInput!]
+  updateMany: [CategoryUpdateManyWithWhereWithoutRestaurantInput!]
+  upsert: [CategoryUpsertWithWhereUniqueWithoutRestaurantInput!]
 }
 
-input CateogryUpdateWithWhereUniqueWithoutMenuInput {
-  data: CateogryUpdateWithoutMenuInput!
-  where: CateogryWhereUniqueInput!
+input CategoryUpdateOneRequiredWithoutContentInput {
+  connect: CategoryWhereUniqueInput
+  connectOrCreate: CategoryCreateOrConnectWithoutContentInput
+  create: CategoryCreateWithoutContentInput
+  update: CategoryUpdateWithoutContentInput
+  upsert: CategoryUpsertWithoutContentInput
 }
 
-input CateogryUpdateWithoutContentInput {
+input CategoryUpdateOneRequiredWithoutItemsInput {
+  connect: CategoryWhereUniqueInput
+  connectOrCreate: CategoryCreateOrConnectWithoutItemsInput
+  create: CategoryCreateWithoutItemsInput
+  update: CategoryUpdateWithoutItemsInput
+  upsert: CategoryUpsertWithoutItemsInput
+}
+
+input CategoryUpdateWithWhereUniqueWithoutMenuInput {
+  data: CategoryUpdateWithoutMenuInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryUpdateWithWhereUniqueWithoutRestaurantInput {
+  data: CategoryUpdateWithoutRestaurantInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryUpdateWithoutContentInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   items: ItemUpdateManyWithoutCategoryInput
-  menu: MenuUpdateOneRequiredWithoutCategoriesInput
+  menu: MenuUpdateOneWithoutCategoriesInput
+  restaurant: RestaurantUpdateOneRequiredWithoutCategoriesInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input CateogryUpdateWithoutItemsInput {
-  content: CateogryI18LUpdateManyWithoutCategoryInput
+input CategoryUpdateWithoutItemsInput {
+  content: CategoryI18LUpdateManyWithoutCategoryInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
-  menu: MenuUpdateOneRequiredWithoutCategoriesInput
+  menu: MenuUpdateOneWithoutCategoriesInput
+  restaurant: RestaurantUpdateOneRequiredWithoutCategoriesInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input CateogryUpdateWithoutMenuInput {
-  content: CateogryI18LUpdateManyWithoutCategoryInput
+input CategoryUpdateWithoutMenuInput {
+  content: CategoryI18LUpdateManyWithoutCategoryInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   items: ItemUpdateManyWithoutCategoryInput
+  restaurant: RestaurantUpdateOneRequiredWithoutCategoriesInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input CateogryUpsertWithWhereUniqueWithoutMenuInput {
-  create: CateogryCreateWithoutMenuInput!
-  update: CateogryUpdateWithoutMenuInput!
-  where: CateogryWhereUniqueInput!
+input CategoryUpdateWithoutRestaurantInput {
+  content: CategoryI18LUpdateManyWithoutCategoryInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  identifier: StringFieldUpdateOperationsInput
+  items: ItemUpdateManyWithoutCategoryInput
+  menu: MenuUpdateOneWithoutCategoriesInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input CateogryUpsertWithoutContentInput {
-  create: CateogryCreateWithoutContentInput!
-  update: CateogryUpdateWithoutContentInput!
+input CategoryUpsertWithWhereUniqueWithoutMenuInput {
+  create: CategoryCreateWithoutMenuInput!
+  update: CategoryUpdateWithoutMenuInput!
+  where: CategoryWhereUniqueInput!
 }
 
-input CateogryUpsertWithoutItemsInput {
-  create: CateogryCreateWithoutItemsInput!
-  update: CateogryUpdateWithoutItemsInput!
+input CategoryUpsertWithWhereUniqueWithoutRestaurantInput {
+  create: CategoryCreateWithoutRestaurantInput!
+  update: CategoryUpdateWithoutRestaurantInput!
+  where: CategoryWhereUniqueInput!
 }
 
-input CateogryWhereInput {
-  AND: [CateogryWhereInput!]
-  NOT: [CateogryWhereInput!]
-  OR: [CateogryWhereInput!]
-  content: CateogryI18LListRelationFilter
+input CategoryUpsertWithoutContentInput {
+  create: CategoryCreateWithoutContentInput!
+  update: CategoryUpdateWithoutContentInput!
+}
+
+input CategoryUpsertWithoutItemsInput {
+  create: CategoryCreateWithoutItemsInput!
+  update: CategoryUpdateWithoutItemsInput!
+}
+
+input CategoryWhereInput {
+  AND: [CategoryWhereInput!]
+  NOT: [CategoryWhereInput!]
+  OR: [CategoryWhereInput!]
+  content: CategoryI18LListRelationFilter
   createdAt: DateTimeFilter
   id: IntFilter
   identifier: StringFilter
   items: ItemListRelationFilter
   menu: MenuRelationFilter
-  menuId: IntFilter
+  menuId: IntNullableFilter
+  restaurant: RestaurantRelationFilter
+  restaurantId: IntFilter
   updatedAt: DateTimeFilter
 }
 
-input CateogryWhereUniqueInput {
+input CategoryWhereUniqueInput {
   id: Int
   identifier: String
 }
@@ -785,6 +914,33 @@ input IntFilter {
   notIn: [Int!]
 }
 
+input IntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input IntNullableWithAggregatesFilter {
+  _avg: NestedFloatNullableFilter
+  _count: NestedIntNullableFilter
+  _max: NestedIntNullableFilter
+  _min: NestedIntNullableFilter
+  _sum: NestedIntNullableFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableWithAggregatesFilter
+  notIn: [Int!]
+}
+
 input IntWithAggregatesFilter {
   _avg: NestedFloatFilter
   _count: NestedIntFilter
@@ -803,15 +959,17 @@ input IntWithAggregatesFilter {
 
 type Item {
   _count: ItemCount
-  category: Cateogry!
+  category: Category!
   categoryId: Int!
   content(cursor: ItemI18LWhereUniqueInput, distinct: [ItemI18LScalarFieldEnum!], orderBy: [ItemI18LOrderByWithRelationInput!], skip: Int, take: Int, where: ItemI18LWhereInput): [ItemI18L!]!
   createdAt: DateTime!
   id: Int!
   identifier: String!
   image: String!
-  items(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
+  orderItems(cursor: OrderItemWhereUniqueInput, distinct: [OrderItemScalarFieldEnum!], orderBy: [OrderItemOrderByWithRelationInput!], skip: Int, take: Int, where: OrderItemWhereInput): [OrderItem!]!
   price: Int!
+  restaurant: Restaurant!
+  restaurantId: Int!
   updatedAt: DateTime!
 }
 
@@ -819,17 +977,19 @@ type ItemAvgAggregate {
   categoryId: Float
   id: Float
   price: Float
+  restaurantId: Float
 }
 
 input ItemAvgOrderByAggregateInput {
   categoryId: SortOrder
   id: SortOrder
   price: SortOrder
+  restaurantId: SortOrder
 }
 
 type ItemCount {
   content: Int!
-  items: Int!
+  orderItems: Int!
 }
 
 type ItemCountAggregate {
@@ -840,6 +1000,7 @@ type ItemCountAggregate {
   identifier: Int!
   image: Int!
   price: Int!
+  restaurantId: Int!
   updatedAt: Int!
 }
 
@@ -850,17 +1011,19 @@ input ItemCountOrderByAggregateInput {
   identifier: SortOrder
   image: SortOrder
   price: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
 input ItemCreateInput {
-  category: CateogryCreateNestedOneWithoutItemsInput!
+  category: CategoryCreateNestedOneWithoutItemsInput!
   content: ItemI18LCreateNestedManyWithoutItemInput
   createdAt: DateTime
   identifier: String!
   image: String!
-  items: OrderCreateNestedManyWithoutItemsInput
+  orderItems: OrderItemCreateNestedManyWithoutItemInput
   price: Int!
+  restaurant: RestaurantCreateNestedOneWithoutInventoryInput!
   updatedAt: DateTime
 }
 
@@ -870,6 +1033,7 @@ input ItemCreateManyCategoryInput {
   identifier: String!
   image: String!
   price: Int!
+  restaurantId: Int!
   updatedAt: DateTime
 }
 
@@ -885,7 +1049,23 @@ input ItemCreateManyInput {
   identifier: String!
   image: String!
   price: Int!
+  restaurantId: Int!
   updatedAt: DateTime
+}
+
+input ItemCreateManyRestaurantInput {
+  categoryId: Int!
+  createdAt: DateTime
+  id: Int
+  identifier: String!
+  image: String!
+  price: Int!
+  updatedAt: DateTime
+}
+
+input ItemCreateManyRestaurantInputEnvelope {
+  data: [ItemCreateManyRestaurantInput!]!
+  skipDuplicates: Boolean
 }
 
 input ItemCreateNestedManyWithoutCategoryInput {
@@ -895,16 +1075,23 @@ input ItemCreateNestedManyWithoutCategoryInput {
   createMany: ItemCreateManyCategoryInputEnvelope
 }
 
-input ItemCreateNestedManyWithoutItemsInput {
+input ItemCreateNestedManyWithoutRestaurantInput {
   connect: [ItemWhereUniqueInput!]
-  connectOrCreate: [ItemCreateOrConnectWithoutItemsInput!]
-  create: [ItemCreateWithoutItemsInput!]
+  connectOrCreate: [ItemCreateOrConnectWithoutRestaurantInput!]
+  create: [ItemCreateWithoutRestaurantInput!]
+  createMany: ItemCreateManyRestaurantInputEnvelope
 }
 
 input ItemCreateNestedOneWithoutContentInput {
   connect: ItemWhereUniqueInput
   connectOrCreate: ItemCreateOrConnectWithoutContentInput
   create: ItemCreateWithoutContentInput
+}
+
+input ItemCreateNestedOneWithoutOrderItemsInput {
+  connect: ItemWhereUniqueInput
+  connectOrCreate: ItemCreateOrConnectWithoutOrderItemsInput
+  create: ItemCreateWithoutOrderItemsInput
 }
 
 input ItemCreateOrConnectWithoutCategoryInput {
@@ -917,8 +1104,13 @@ input ItemCreateOrConnectWithoutContentInput {
   where: ItemWhereUniqueInput!
 }
 
-input ItemCreateOrConnectWithoutItemsInput {
-  create: ItemCreateWithoutItemsInput!
+input ItemCreateOrConnectWithoutOrderItemsInput {
+  create: ItemCreateWithoutOrderItemsInput!
+  where: ItemWhereUniqueInput!
+}
+
+input ItemCreateOrConnectWithoutRestaurantInput {
+  create: ItemCreateWithoutRestaurantInput!
   where: ItemWhereUniqueInput!
 }
 
@@ -927,27 +1119,41 @@ input ItemCreateWithoutCategoryInput {
   createdAt: DateTime
   identifier: String!
   image: String!
-  items: OrderCreateNestedManyWithoutItemsInput
+  orderItems: OrderItemCreateNestedManyWithoutItemInput
   price: Int!
+  restaurant: RestaurantCreateNestedOneWithoutInventoryInput!
   updatedAt: DateTime
 }
 
 input ItemCreateWithoutContentInput {
-  category: CateogryCreateNestedOneWithoutItemsInput!
+  category: CategoryCreateNestedOneWithoutItemsInput!
   createdAt: DateTime
   identifier: String!
   image: String!
-  items: OrderCreateNestedManyWithoutItemsInput
+  orderItems: OrderItemCreateNestedManyWithoutItemInput
   price: Int!
+  restaurant: RestaurantCreateNestedOneWithoutInventoryInput!
   updatedAt: DateTime
 }
 
-input ItemCreateWithoutItemsInput {
-  category: CateogryCreateNestedOneWithoutItemsInput!
+input ItemCreateWithoutOrderItemsInput {
+  category: CategoryCreateNestedOneWithoutItemsInput!
   content: ItemI18LCreateNestedManyWithoutItemInput
   createdAt: DateTime
   identifier: String!
   image: String!
+  price: Int!
+  restaurant: RestaurantCreateNestedOneWithoutInventoryInput!
+  updatedAt: DateTime
+}
+
+input ItemCreateWithoutRestaurantInput {
+  category: CategoryCreateNestedOneWithoutItemsInput!
+  content: ItemI18LCreateNestedManyWithoutItemInput
+  createdAt: DateTime
+  identifier: String!
+  image: String!
+  orderItems: OrderItemCreateNestedManyWithoutItemInput
   price: Int!
   updatedAt: DateTime
 }
@@ -964,6 +1170,7 @@ type ItemGroupBy {
   identifier: String!
   image: String!
   price: Int!
+  restaurantId: Int!
   updatedAt: DateTime!
 }
 
@@ -1243,6 +1450,7 @@ type ItemMaxAggregate {
   identifier: String
   image: String
   price: Int
+  restaurantId: Int
   updatedAt: DateTime
 }
 
@@ -1253,6 +1461,7 @@ input ItemMaxOrderByAggregateInput {
   identifier: SortOrder
   image: SortOrder
   price: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
@@ -1263,6 +1472,7 @@ type ItemMinAggregate {
   identifier: String
   image: String
   price: Int
+  restaurantId: Int
   updatedAt: DateTime
 }
 
@@ -1273,6 +1483,7 @@ input ItemMinOrderByAggregateInput {
   identifier: SortOrder
   image: SortOrder
   price: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
@@ -1292,19 +1503,22 @@ input ItemOrderByWithAggregationInput {
   identifier: SortOrder
   image: SortOrder
   price: SortOrder
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
 input ItemOrderByWithRelationInput {
-  category: CateogryOrderByWithRelationInput
+  category: CategoryOrderByWithRelationInput
   categoryId: SortOrder
   content: ItemI18LOrderByRelationAggregateInput
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
   image: SortOrder
-  items: OrderOrderByRelationAggregateInput
+  orderItems: OrderItemOrderByRelationAggregateInput
   price: SortOrder
+  restaurant: RestaurantOrderByWithRelationInput
+  restaurantId: SortOrder
   updatedAt: SortOrder
 }
 
@@ -1320,6 +1534,7 @@ enum ItemScalarFieldEnum {
   identifier
   image
   price
+  restaurantId
   updatedAt
 }
 
@@ -1333,6 +1548,7 @@ input ItemScalarWhereInput {
   identifier: StringFilter
   image: StringFilter
   price: IntFilter
+  restaurantId: IntFilter
   updatedAt: DateTimeFilter
 }
 
@@ -1346,6 +1562,7 @@ input ItemScalarWhereWithAggregatesInput {
   identifier: StringWithAggregatesFilter
   image: StringWithAggregatesFilter
   price: IntWithAggregatesFilter
+  restaurantId: IntWithAggregatesFilter
   updatedAt: DateTimeWithAggregatesFilter
 }
 
@@ -1353,22 +1570,25 @@ type ItemSumAggregate {
   categoryId: Int
   id: Int
   price: Int
+  restaurantId: Int
 }
 
 input ItemSumOrderByAggregateInput {
   categoryId: SortOrder
   id: SortOrder
   price: SortOrder
+  restaurantId: SortOrder
 }
 
 input ItemUpdateInput {
-  category: CateogryUpdateOneRequiredWithoutItemsInput
+  category: CategoryUpdateOneRequiredWithoutItemsInput
   content: ItemI18LUpdateManyWithoutItemInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  items: OrderUpdateManyWithoutItemsInput
+  orderItems: OrderItemUpdateManyWithoutItemInput
   price: IntFieldUpdateOperationsInput
+  restaurant: RestaurantUpdateOneRequiredWithoutInventoryInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
@@ -1385,7 +1605,7 @@ input ItemUpdateManyWithWhereWithoutCategoryInput {
   where: ItemScalarWhereInput!
 }
 
-input ItemUpdateManyWithWhereWithoutItemsInput {
+input ItemUpdateManyWithWhereWithoutRestaurantInput {
   data: ItemUpdateManyMutationInput!
   where: ItemScalarWhereInput!
 }
@@ -1404,17 +1624,18 @@ input ItemUpdateManyWithoutCategoryInput {
   upsert: [ItemUpsertWithWhereUniqueWithoutCategoryInput!]
 }
 
-input ItemUpdateManyWithoutItemsInput {
+input ItemUpdateManyWithoutRestaurantInput {
   connect: [ItemWhereUniqueInput!]
-  connectOrCreate: [ItemCreateOrConnectWithoutItemsInput!]
-  create: [ItemCreateWithoutItemsInput!]
+  connectOrCreate: [ItemCreateOrConnectWithoutRestaurantInput!]
+  create: [ItemCreateWithoutRestaurantInput!]
+  createMany: ItemCreateManyRestaurantInputEnvelope
   delete: [ItemWhereUniqueInput!]
   deleteMany: [ItemScalarWhereInput!]
   disconnect: [ItemWhereUniqueInput!]
   set: [ItemWhereUniqueInput!]
-  update: [ItemUpdateWithWhereUniqueWithoutItemsInput!]
-  updateMany: [ItemUpdateManyWithWhereWithoutItemsInput!]
-  upsert: [ItemUpsertWithWhereUniqueWithoutItemsInput!]
+  update: [ItemUpdateWithWhereUniqueWithoutRestaurantInput!]
+  updateMany: [ItemUpdateManyWithWhereWithoutRestaurantInput!]
+  upsert: [ItemUpsertWithWhereUniqueWithoutRestaurantInput!]
 }
 
 input ItemUpdateOneRequiredWithoutContentInput {
@@ -1425,13 +1646,21 @@ input ItemUpdateOneRequiredWithoutContentInput {
   upsert: ItemUpsertWithoutContentInput
 }
 
+input ItemUpdateOneRequiredWithoutOrderItemsInput {
+  connect: ItemWhereUniqueInput
+  connectOrCreate: ItemCreateOrConnectWithoutOrderItemsInput
+  create: ItemCreateWithoutOrderItemsInput
+  update: ItemUpdateWithoutOrderItemsInput
+  upsert: ItemUpsertWithoutOrderItemsInput
+}
+
 input ItemUpdateWithWhereUniqueWithoutCategoryInput {
   data: ItemUpdateWithoutCategoryInput!
   where: ItemWhereUniqueInput!
 }
 
-input ItemUpdateWithWhereUniqueWithoutItemsInput {
-  data: ItemUpdateWithoutItemsInput!
+input ItemUpdateWithWhereUniqueWithoutRestaurantInput {
+  data: ItemUpdateWithoutRestaurantInput!
   where: ItemWhereUniqueInput!
 }
 
@@ -1440,27 +1669,41 @@ input ItemUpdateWithoutCategoryInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  items: OrderUpdateManyWithoutItemsInput
+  orderItems: OrderItemUpdateManyWithoutItemInput
   price: IntFieldUpdateOperationsInput
+  restaurant: RestaurantUpdateOneRequiredWithoutInventoryInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input ItemUpdateWithoutContentInput {
-  category: CateogryUpdateOneRequiredWithoutItemsInput
+  category: CategoryUpdateOneRequiredWithoutItemsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  items: OrderUpdateManyWithoutItemsInput
+  orderItems: OrderItemUpdateManyWithoutItemInput
   price: IntFieldUpdateOperationsInput
+  restaurant: RestaurantUpdateOneRequiredWithoutInventoryInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input ItemUpdateWithoutItemsInput {
-  category: CateogryUpdateOneRequiredWithoutItemsInput
+input ItemUpdateWithoutOrderItemsInput {
+  category: CategoryUpdateOneRequiredWithoutItemsInput
   content: ItemI18LUpdateManyWithoutItemInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
+  price: IntFieldUpdateOperationsInput
+  restaurant: RestaurantUpdateOneRequiredWithoutInventoryInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ItemUpdateWithoutRestaurantInput {
+  category: CategoryUpdateOneRequiredWithoutItemsInput
+  content: ItemI18LUpdateManyWithoutItemInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  identifier: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  orderItems: OrderItemUpdateManyWithoutItemInput
   price: IntFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -1471,9 +1714,9 @@ input ItemUpsertWithWhereUniqueWithoutCategoryInput {
   where: ItemWhereUniqueInput!
 }
 
-input ItemUpsertWithWhereUniqueWithoutItemsInput {
-  create: ItemCreateWithoutItemsInput!
-  update: ItemUpdateWithoutItemsInput!
+input ItemUpsertWithWhereUniqueWithoutRestaurantInput {
+  create: ItemCreateWithoutRestaurantInput!
+  update: ItemUpdateWithoutRestaurantInput!
   where: ItemWhereUniqueInput!
 }
 
@@ -1482,19 +1725,26 @@ input ItemUpsertWithoutContentInput {
   update: ItemUpdateWithoutContentInput!
 }
 
+input ItemUpsertWithoutOrderItemsInput {
+  create: ItemCreateWithoutOrderItemsInput!
+  update: ItemUpdateWithoutOrderItemsInput!
+}
+
 input ItemWhereInput {
   AND: [ItemWhereInput!]
   NOT: [ItemWhereInput!]
   OR: [ItemWhereInput!]
-  category: CateogryRelationFilter
+  category: CategoryRelationFilter
   categoryId: IntFilter
   content: ItemI18LListRelationFilter
   createdAt: DateTimeFilter
   id: IntFilter
   identifier: StringFilter
   image: StringFilter
-  items: OrderListRelationFilter
+  orderItems: OrderItemListRelationFilter
   price: IntFilter
+  restaurant: RestaurantRelationFilter
+  restaurantId: IntFilter
   updatedAt: DateTimeFilter
 }
 
@@ -1509,7 +1759,7 @@ enum Locale {
 
 type Menu {
   _count: MenuCount
-  categories(cursor: CateogryWhereUniqueInput, distinct: [CateogryScalarFieldEnum!], orderBy: [CateogryOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryWhereInput): [Cateogry!]!
+  categories(cursor: CategoryWhereUniqueInput, distinct: [CategoryScalarFieldEnum!], orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): [Category!]!
   createdAt: DateTime!
   id: Int!
   identifier: String!
@@ -1550,7 +1800,7 @@ input MenuCountOrderByAggregateInput {
 }
 
 input MenuCreateInput {
-  categories: CateogryCreateNestedManyWithoutMenuInput
+  categories: CategoryCreateNestedManyWithoutMenuInput
   createdAt: DateTime
   identifier: String!
   restaurant: RestaurantCreateNestedOneWithoutMenuInput!
@@ -1595,7 +1845,7 @@ input MenuCreateWithoutCategoriesInput {
 }
 
 input MenuCreateWithoutRestaurantInput {
-  categories: CateogryCreateNestedManyWithoutMenuInput
+  categories: CategoryCreateNestedManyWithoutMenuInput
   createdAt: DateTime
   identifier: String!
   updatedAt: DateTime
@@ -1660,7 +1910,7 @@ input MenuOrderByWithAggregationInput {
 }
 
 input MenuOrderByWithRelationInput {
-  categories: CateogryOrderByRelationAggregateInput
+  categories: CategoryOrderByRelationAggregateInput
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
@@ -1704,7 +1954,7 @@ input MenuSumOrderByAggregateInput {
 }
 
 input MenuUpdateInput {
-  categories: CateogryUpdateManyWithoutMenuInput
+  categories: CategoryUpdateManyWithoutMenuInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   restaurant: RestaurantUpdateOneRequiredWithoutMenuInput
@@ -1717,10 +1967,12 @@ input MenuUpdateManyMutationInput {
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input MenuUpdateOneRequiredWithoutCategoriesInput {
+input MenuUpdateOneWithoutCategoriesInput {
   connect: MenuWhereUniqueInput
   connectOrCreate: MenuCreateOrConnectWithoutCategoriesInput
   create: MenuCreateWithoutCategoriesInput
+  delete: Boolean
+  disconnect: Boolean
   update: MenuUpdateWithoutCategoriesInput
   upsert: MenuUpsertWithoutCategoriesInput
 }
@@ -1743,7 +1995,7 @@ input MenuUpdateWithoutCategoriesInput {
 }
 
 input MenuUpdateWithoutRestaurantInput {
-  categories: CateogryUpdateManyWithoutMenuInput
+  categories: CategoryUpdateManyWithoutMenuInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -1763,7 +2015,7 @@ input MenuWhereInput {
   AND: [MenuWhereInput!]
   NOT: [MenuWhereInput!]
   OR: [MenuWhereInput!]
-  categories: CateogryListRelationFilter
+  categories: CategoryListRelationFilter
   createdAt: DateTimeFilter
   id: IntFilter
   identifier: StringFilter
@@ -1779,69 +2031,89 @@ input MenuWhereUniqueInput {
 }
 
 type Mutation {
-  createCateogry(data: CateogryCreateInput!): Cateogry!
-  createCateogryI18L(data: CateogryI18LCreateInput!): CateogryI18L!
+  createCategory(data: CategoryCreateInput!): Category!
+  createCategoryI18L(data: CategoryI18LCreateInput!): CategoryI18L!
   createItem(data: ItemCreateInput!): Item!
   createItemI18L(data: ItemI18LCreateInput!): ItemI18L!
-  createManyCateogry(data: [CateogryCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
-  createManyCateogryI18L(data: [CateogryI18LCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyCategory(data: [CategoryCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyCategoryI18L(data: [CategoryI18LCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyItem(data: [ItemCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyItemI18L(data: [ItemI18LCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyMenu(data: [MenuCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyOrder(data: [OrderCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyOrderItem(data: [OrderItemCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyRestaurant(data: [RestaurantCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyRestaurantI18L(data: [RestaurantI18LCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyUser(data: [UserCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createMenu(data: MenuCreateInput!): Menu!
   createOrder(data: OrderCreateInput!): Order!
+  createOrderItem(data: OrderItemCreateInput!): OrderItem!
   createRestaurant(data: RestaurantCreateInput!): Restaurant!
   createRestaurantI18L(data: RestaurantI18LCreateInput!): RestaurantI18L!
   createUser(data: UserCreateInput!): User!
-  deleteCateogry(where: CateogryWhereUniqueInput!): Cateogry
-  deleteCateogryI18L(where: CateogryI18LWhereUniqueInput!): CateogryI18L
+  deleteCategory(where: CategoryWhereUniqueInput!): Category
+  deleteCategoryI18L(where: CategoryI18LWhereUniqueInput!): CategoryI18L
   deleteItem(where: ItemWhereUniqueInput!): Item
   deleteItemI18L(where: ItemI18LWhereUniqueInput!): ItemI18L
-  deleteManyCateogry(where: CateogryWhereInput): AffectedRowsOutput!
-  deleteManyCateogryI18L(where: CateogryI18LWhereInput): AffectedRowsOutput!
+  deleteManyCategory(where: CategoryWhereInput): AffectedRowsOutput!
+  deleteManyCategoryI18L(where: CategoryI18LWhereInput): AffectedRowsOutput!
   deleteManyItem(where: ItemWhereInput): AffectedRowsOutput!
   deleteManyItemI18L(where: ItemI18LWhereInput): AffectedRowsOutput!
   deleteManyMenu(where: MenuWhereInput): AffectedRowsOutput!
   deleteManyOrder(where: OrderWhereInput): AffectedRowsOutput!
+  deleteManyOrderItem(where: OrderItemWhereInput): AffectedRowsOutput!
   deleteManyRestaurant(where: RestaurantWhereInput): AffectedRowsOutput!
   deleteManyRestaurantI18L(where: RestaurantI18LWhereInput): AffectedRowsOutput!
   deleteManyUser(where: UserWhereInput): AffectedRowsOutput!
   deleteMenu(where: MenuWhereUniqueInput!): Menu
   deleteOrder(where: OrderWhereUniqueInput!): Order
+  deleteOrderItem(where: OrderItemWhereUniqueInput!): OrderItem
   deleteRestaurant(where: RestaurantWhereUniqueInput!): Restaurant
   deleteRestaurantI18L(where: RestaurantI18LWhereUniqueInput!): RestaurantI18L
   deleteUser(where: UserWhereUniqueInput!): User
-  updateCateogry(data: CateogryUpdateInput!, where: CateogryWhereUniqueInput!): Cateogry
-  updateCateogryI18L(data: CateogryI18LUpdateInput!, where: CateogryI18LWhereUniqueInput!): CateogryI18L
+  updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
+  updateCategoryI18L(data: CategoryI18LUpdateInput!, where: CategoryI18LWhereUniqueInput!): CategoryI18L
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item
   updateItemI18L(data: ItemI18LUpdateInput!, where: ItemI18LWhereUniqueInput!): ItemI18L
-  updateManyCateogry(data: CateogryUpdateManyMutationInput!, where: CateogryWhereInput): AffectedRowsOutput!
-  updateManyCateogryI18L(data: CateogryI18LUpdateManyMutationInput!, where: CateogryI18LWhereInput): AffectedRowsOutput!
+  updateManyCategory(data: CategoryUpdateManyMutationInput!, where: CategoryWhereInput): AffectedRowsOutput!
+  updateManyCategoryI18L(data: CategoryI18LUpdateManyMutationInput!, where: CategoryI18LWhereInput): AffectedRowsOutput!
   updateManyItem(data: ItemUpdateManyMutationInput!, where: ItemWhereInput): AffectedRowsOutput!
   updateManyItemI18L(data: ItemI18LUpdateManyMutationInput!, where: ItemI18LWhereInput): AffectedRowsOutput!
   updateManyMenu(data: MenuUpdateManyMutationInput!, where: MenuWhereInput): AffectedRowsOutput!
   updateManyOrder(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): AffectedRowsOutput!
+  updateManyOrderItem(data: OrderItemUpdateManyMutationInput!, where: OrderItemWhereInput): AffectedRowsOutput!
   updateManyRestaurant(data: RestaurantUpdateManyMutationInput!, where: RestaurantWhereInput): AffectedRowsOutput!
   updateManyRestaurantI18L(data: RestaurantI18LUpdateManyMutationInput!, where: RestaurantI18LWhereInput): AffectedRowsOutput!
   updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): AffectedRowsOutput!
   updateMenu(data: MenuUpdateInput!, where: MenuWhereUniqueInput!): Menu
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
+  updateOrderItem(data: OrderItemUpdateInput!, where: OrderItemWhereUniqueInput!): OrderItem
   updateRestaurant(data: RestaurantUpdateInput!, where: RestaurantWhereUniqueInput!): Restaurant
   updateRestaurantI18L(data: RestaurantI18LUpdateInput!, where: RestaurantI18LWhereUniqueInput!): RestaurantI18L
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  upsertCateogry(create: CateogryCreateInput!, update: CateogryUpdateInput!, where: CateogryWhereUniqueInput!): Cateogry!
-  upsertCateogryI18L(create: CateogryI18LCreateInput!, update: CateogryI18LUpdateInput!, where: CateogryI18LWhereUniqueInput!): CateogryI18L!
+  upsertCategory(create: CategoryCreateInput!, update: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+  upsertCategoryI18L(create: CategoryI18LCreateInput!, update: CategoryI18LUpdateInput!, where: CategoryI18LWhereUniqueInput!): CategoryI18L!
   upsertItem(create: ItemCreateInput!, update: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
   upsertItemI18L(create: ItemI18LCreateInput!, update: ItemI18LUpdateInput!, where: ItemI18LWhereUniqueInput!): ItemI18L!
   upsertMenu(create: MenuCreateInput!, update: MenuUpdateInput!, where: MenuWhereUniqueInput!): Menu!
   upsertOrder(create: OrderCreateInput!, update: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order!
+  upsertOrderItem(create: OrderItemCreateInput!, update: OrderItemUpdateInput!, where: OrderItemWhereUniqueInput!): OrderItem!
   upsertRestaurant(create: RestaurantCreateInput!, update: RestaurantUpdateInput!, where: RestaurantWhereUniqueInput!): Restaurant!
   upsertRestaurantI18L(create: RestaurantI18LCreateInput!, update: RestaurantI18LUpdateInput!, where: RestaurantI18LWhereUniqueInput!): RestaurantI18L!
   upsertUser(create: UserCreateInput!, update: UserUpdateInput!, where: UserWhereUniqueInput!): User!
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input NestedBoolWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedBoolFilter
+  _min: NestedBoolFilter
+  equals: Boolean
+  not: NestedBoolWithAggregatesFilter
 }
 
 input NestedDateTimeFilter {
@@ -1897,6 +2169,17 @@ input NestedFloatFilter {
   notIn: [Float!]
 }
 
+input NestedFloatNullableFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatNullableFilter
+  notIn: [Float!]
+}
+
 input NestedIntFilter {
   equals: Int
   gt: Int
@@ -1916,6 +2199,22 @@ input NestedIntNullableFilter {
   lt: Int
   lte: Int
   not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableWithAggregatesFilter {
+  _avg: NestedFloatNullableFilter
+  _count: NestedIntNullableFilter
+  _max: NestedIntNullableFilter
+  _min: NestedIntNullableFilter
+  _sum: NestedIntNullableFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableWithAggregatesFilter
   notIn: [Int!]
 }
 
@@ -2004,9 +2303,11 @@ input NullableStringFieldUpdateOperationsInput {
 type Order {
   _count: OrderCount
   createdAt: DateTime!
+  deleted: Boolean!
+  fulilled: Boolean!
   id: Int!
   identifier: String!
-  items(cursor: ItemWhereUniqueInput, distinct: [ItemScalarFieldEnum!], orderBy: [ItemOrderByWithRelationInput!], skip: Int, take: Int, where: ItemWhereInput): [Item!]!
+  orderItems(cursor: OrderItemWhereUniqueInput, distinct: [OrderItemScalarFieldEnum!], orderBy: [OrderItemOrderByWithRelationInput!], skip: Int, take: Int, where: OrderItemWhereInput): [OrderItem!]!
   restaurant: Restaurant!
   restaurantId: Int!
   table: String!
@@ -2024,12 +2325,14 @@ input OrderAvgOrderByAggregateInput {
 }
 
 type OrderCount {
-  items: Int!
+  orderItems: Int!
 }
 
 type OrderCountAggregate {
   _all: Int!
   createdAt: Int!
+  deleted: Int!
+  fulilled: Int!
   id: Int!
   identifier: Int!
   restaurantId: Int!
@@ -2039,6 +2342,8 @@ type OrderCountAggregate {
 
 input OrderCountOrderByAggregateInput {
   createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
   id: SortOrder
   identifier: SortOrder
   restaurantId: SortOrder
@@ -2048,15 +2353,19 @@ input OrderCountOrderByAggregateInput {
 
 input OrderCreateInput {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   identifier: String!
-  items: ItemCreateNestedManyWithoutItemsInput
-  restaurant: RestaurantCreateNestedOneWithoutOrderInput!
+  orderItems: OrderItemCreateNestedManyWithoutOrderInput
+  restaurant: RestaurantCreateNestedOneWithoutOrdersInput!
   table: String!
   updatedAt: DateTime
 }
 
 input OrderCreateManyInput {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   id: Int
   identifier: String!
   restaurantId: Int!
@@ -2066,6 +2375,8 @@ input OrderCreateManyInput {
 
 input OrderCreateManyRestaurantInput {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   id: Int
   identifier: String!
   table: String!
@@ -2077,12 +2388,6 @@ input OrderCreateManyRestaurantInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input OrderCreateNestedManyWithoutItemsInput {
-  connect: [OrderWhereUniqueInput!]
-  connectOrCreate: [OrderCreateOrConnectWithoutItemsInput!]
-  create: [OrderCreateWithoutItemsInput!]
-}
-
 input OrderCreateNestedManyWithoutRestaurantInput {
   connect: [OrderWhereUniqueInput!]
   connectOrCreate: [OrderCreateOrConnectWithoutRestaurantInput!]
@@ -2090,8 +2395,14 @@ input OrderCreateNestedManyWithoutRestaurantInput {
   createMany: OrderCreateManyRestaurantInputEnvelope
 }
 
-input OrderCreateOrConnectWithoutItemsInput {
-  create: OrderCreateWithoutItemsInput!
+input OrderCreateNestedOneWithoutOrderItemsInput {
+  connect: OrderWhereUniqueInput
+  connectOrCreate: OrderCreateOrConnectWithoutOrderItemsInput
+  create: OrderCreateWithoutOrderItemsInput
+}
+
+input OrderCreateOrConnectWithoutOrderItemsInput {
+  create: OrderCreateWithoutOrderItemsInput!
   where: OrderWhereUniqueInput!
 }
 
@@ -2100,18 +2411,22 @@ input OrderCreateOrConnectWithoutRestaurantInput {
   where: OrderWhereUniqueInput!
 }
 
-input OrderCreateWithoutItemsInput {
+input OrderCreateWithoutOrderItemsInput {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   identifier: String!
-  restaurant: RestaurantCreateNestedOneWithoutOrderInput!
+  restaurant: RestaurantCreateNestedOneWithoutOrdersInput!
   table: String!
   updatedAt: DateTime
 }
 
 input OrderCreateWithoutRestaurantInput {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   identifier: String!
-  items: ItemCreateNestedManyWithoutItemsInput
+  orderItems: OrderItemCreateNestedManyWithoutOrderInput
   table: String!
   updatedAt: DateTime
 }
@@ -2123,11 +2438,396 @@ type OrderGroupBy {
   _min: OrderMinAggregate
   _sum: OrderSumAggregate
   createdAt: DateTime!
+  deleted: Boolean!
+  fulilled: Boolean!
   id: Int!
   identifier: String!
   restaurantId: Int!
   table: String!
   updatedAt: DateTime!
+}
+
+type OrderItem {
+  createdAt: DateTime!
+  deleted: Boolean!
+  fulilled: Boolean!
+  id: Int!
+  item: Item!
+  itemId: Int!
+  order: Order!
+  orderId: Int!
+  updatedAt: DateTime!
+}
+
+type OrderItemAvgAggregate {
+  id: Float
+  itemId: Float
+  orderId: Float
+}
+
+input OrderItemAvgOrderByAggregateInput {
+  id: SortOrder
+  itemId: SortOrder
+  orderId: SortOrder
+}
+
+type OrderItemCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  deleted: Int!
+  fulilled: Int!
+  id: Int!
+  itemId: Int!
+  orderId: Int!
+  updatedAt: Int!
+}
+
+input OrderItemCountOrderByAggregateInput {
+  createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
+  id: SortOrder
+  itemId: SortOrder
+  orderId: SortOrder
+  updatedAt: SortOrder
+}
+
+input OrderItemCreateInput {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  item: ItemCreateNestedOneWithoutOrderItemsInput!
+  order: OrderCreateNestedOneWithoutOrderItemsInput!
+  updatedAt: DateTime
+}
+
+input OrderItemCreateManyInput {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  id: Int
+  itemId: Int!
+  orderId: Int!
+  updatedAt: DateTime
+}
+
+input OrderItemCreateManyItemInput {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  id: Int
+  orderId: Int!
+  updatedAt: DateTime
+}
+
+input OrderItemCreateManyItemInputEnvelope {
+  data: [OrderItemCreateManyItemInput!]!
+  skipDuplicates: Boolean
+}
+
+input OrderItemCreateManyOrderInput {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  id: Int
+  itemId: Int!
+  updatedAt: DateTime
+}
+
+input OrderItemCreateManyOrderInputEnvelope {
+  data: [OrderItemCreateManyOrderInput!]!
+  skipDuplicates: Boolean
+}
+
+input OrderItemCreateNestedManyWithoutItemInput {
+  connect: [OrderItemWhereUniqueInput!]
+  connectOrCreate: [OrderItemCreateOrConnectWithoutItemInput!]
+  create: [OrderItemCreateWithoutItemInput!]
+  createMany: OrderItemCreateManyItemInputEnvelope
+}
+
+input OrderItemCreateNestedManyWithoutOrderInput {
+  connect: [OrderItemWhereUniqueInput!]
+  connectOrCreate: [OrderItemCreateOrConnectWithoutOrderInput!]
+  create: [OrderItemCreateWithoutOrderInput!]
+  createMany: OrderItemCreateManyOrderInputEnvelope
+}
+
+input OrderItemCreateOrConnectWithoutItemInput {
+  create: OrderItemCreateWithoutItemInput!
+  where: OrderItemWhereUniqueInput!
+}
+
+input OrderItemCreateOrConnectWithoutOrderInput {
+  create: OrderItemCreateWithoutOrderInput!
+  where: OrderItemWhereUniqueInput!
+}
+
+input OrderItemCreateWithoutItemInput {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  order: OrderCreateNestedOneWithoutOrderItemsInput!
+  updatedAt: DateTime
+}
+
+input OrderItemCreateWithoutOrderInput {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  item: ItemCreateNestedOneWithoutOrderItemsInput!
+  updatedAt: DateTime
+}
+
+type OrderItemGroupBy {
+  _avg: OrderItemAvgAggregate
+  _count: OrderItemCountAggregate
+  _max: OrderItemMaxAggregate
+  _min: OrderItemMinAggregate
+  _sum: OrderItemSumAggregate
+  createdAt: DateTime!
+  deleted: Boolean!
+  fulilled: Boolean!
+  id: Int!
+  itemId: Int!
+  orderId: Int!
+  updatedAt: DateTime!
+}
+
+input OrderItemListRelationFilter {
+  every: OrderItemWhereInput
+  none: OrderItemWhereInput
+  some: OrderItemWhereInput
+}
+
+type OrderItemMaxAggregate {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  id: Int
+  itemId: Int
+  orderId: Int
+  updatedAt: DateTime
+}
+
+input OrderItemMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
+  id: SortOrder
+  itemId: SortOrder
+  orderId: SortOrder
+  updatedAt: SortOrder
+}
+
+type OrderItemMinAggregate {
+  createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
+  id: Int
+  itemId: Int
+  orderId: Int
+  updatedAt: DateTime
+}
+
+input OrderItemMinOrderByAggregateInput {
+  createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
+  id: SortOrder
+  itemId: SortOrder
+  orderId: SortOrder
+  updatedAt: SortOrder
+}
+
+input OrderItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input OrderItemOrderByWithAggregationInput {
+  _avg: OrderItemAvgOrderByAggregateInput
+  _count: OrderItemCountOrderByAggregateInput
+  _max: OrderItemMaxOrderByAggregateInput
+  _min: OrderItemMinOrderByAggregateInput
+  _sum: OrderItemSumOrderByAggregateInput
+  createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
+  id: SortOrder
+  itemId: SortOrder
+  orderId: SortOrder
+  updatedAt: SortOrder
+}
+
+input OrderItemOrderByWithRelationInput {
+  createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
+  id: SortOrder
+  item: ItemOrderByWithRelationInput
+  itemId: SortOrder
+  order: OrderOrderByWithRelationInput
+  orderId: SortOrder
+  updatedAt: SortOrder
+}
+
+enum OrderItemScalarFieldEnum {
+  createdAt
+  deleted
+  fulilled
+  id
+  itemId
+  orderId
+  updatedAt
+}
+
+input OrderItemScalarWhereInput {
+  AND: [OrderItemScalarWhereInput!]
+  NOT: [OrderItemScalarWhereInput!]
+  OR: [OrderItemScalarWhereInput!]
+  createdAt: DateTimeFilter
+  deleted: BoolFilter
+  fulilled: BoolFilter
+  id: IntFilter
+  itemId: IntFilter
+  orderId: IntFilter
+  updatedAt: DateTimeFilter
+}
+
+input OrderItemScalarWhereWithAggregatesInput {
+  AND: [OrderItemScalarWhereWithAggregatesInput!]
+  NOT: [OrderItemScalarWhereWithAggregatesInput!]
+  OR: [OrderItemScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  deleted: BoolWithAggregatesFilter
+  fulilled: BoolWithAggregatesFilter
+  id: IntWithAggregatesFilter
+  itemId: IntWithAggregatesFilter
+  orderId: IntWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+}
+
+type OrderItemSumAggregate {
+  id: Int
+  itemId: Int
+  orderId: Int
+}
+
+input OrderItemSumOrderByAggregateInput {
+  id: SortOrder
+  itemId: SortOrder
+  orderId: SortOrder
+}
+
+input OrderItemUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
+  item: ItemUpdateOneRequiredWithoutOrderItemsInput
+  order: OrderUpdateOneRequiredWithoutOrderItemsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input OrderItemUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input OrderItemUpdateManyWithWhereWithoutItemInput {
+  data: OrderItemUpdateManyMutationInput!
+  where: OrderItemScalarWhereInput!
+}
+
+input OrderItemUpdateManyWithWhereWithoutOrderInput {
+  data: OrderItemUpdateManyMutationInput!
+  where: OrderItemScalarWhereInput!
+}
+
+input OrderItemUpdateManyWithoutItemInput {
+  connect: [OrderItemWhereUniqueInput!]
+  connectOrCreate: [OrderItemCreateOrConnectWithoutItemInput!]
+  create: [OrderItemCreateWithoutItemInput!]
+  createMany: OrderItemCreateManyItemInputEnvelope
+  delete: [OrderItemWhereUniqueInput!]
+  deleteMany: [OrderItemScalarWhereInput!]
+  disconnect: [OrderItemWhereUniqueInput!]
+  set: [OrderItemWhereUniqueInput!]
+  update: [OrderItemUpdateWithWhereUniqueWithoutItemInput!]
+  updateMany: [OrderItemUpdateManyWithWhereWithoutItemInput!]
+  upsert: [OrderItemUpsertWithWhereUniqueWithoutItemInput!]
+}
+
+input OrderItemUpdateManyWithoutOrderInput {
+  connect: [OrderItemWhereUniqueInput!]
+  connectOrCreate: [OrderItemCreateOrConnectWithoutOrderInput!]
+  create: [OrderItemCreateWithoutOrderInput!]
+  createMany: OrderItemCreateManyOrderInputEnvelope
+  delete: [OrderItemWhereUniqueInput!]
+  deleteMany: [OrderItemScalarWhereInput!]
+  disconnect: [OrderItemWhereUniqueInput!]
+  set: [OrderItemWhereUniqueInput!]
+  update: [OrderItemUpdateWithWhereUniqueWithoutOrderInput!]
+  updateMany: [OrderItemUpdateManyWithWhereWithoutOrderInput!]
+  upsert: [OrderItemUpsertWithWhereUniqueWithoutOrderInput!]
+}
+
+input OrderItemUpdateWithWhereUniqueWithoutItemInput {
+  data: OrderItemUpdateWithoutItemInput!
+  where: OrderItemWhereUniqueInput!
+}
+
+input OrderItemUpdateWithWhereUniqueWithoutOrderInput {
+  data: OrderItemUpdateWithoutOrderInput!
+  where: OrderItemWhereUniqueInput!
+}
+
+input OrderItemUpdateWithoutItemInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
+  order: OrderUpdateOneRequiredWithoutOrderItemsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input OrderItemUpdateWithoutOrderInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
+  item: ItemUpdateOneRequiredWithoutOrderItemsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input OrderItemUpsertWithWhereUniqueWithoutItemInput {
+  create: OrderItemCreateWithoutItemInput!
+  update: OrderItemUpdateWithoutItemInput!
+  where: OrderItemWhereUniqueInput!
+}
+
+input OrderItemUpsertWithWhereUniqueWithoutOrderInput {
+  create: OrderItemCreateWithoutOrderInput!
+  update: OrderItemUpdateWithoutOrderInput!
+  where: OrderItemWhereUniqueInput!
+}
+
+input OrderItemWhereInput {
+  AND: [OrderItemWhereInput!]
+  NOT: [OrderItemWhereInput!]
+  OR: [OrderItemWhereInput!]
+  createdAt: DateTimeFilter
+  deleted: BoolFilter
+  fulilled: BoolFilter
+  id: IntFilter
+  item: ItemRelationFilter
+  itemId: IntFilter
+  order: OrderRelationFilter
+  orderId: IntFilter
+  updatedAt: DateTimeFilter
+}
+
+input OrderItemWhereUniqueInput {
+  id: Int
 }
 
 input OrderListRelationFilter {
@@ -2138,6 +2838,8 @@ input OrderListRelationFilter {
 
 type OrderMaxAggregate {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   id: Int
   identifier: String
   restaurantId: Int
@@ -2147,6 +2849,8 @@ type OrderMaxAggregate {
 
 input OrderMaxOrderByAggregateInput {
   createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
   id: SortOrder
   identifier: SortOrder
   restaurantId: SortOrder
@@ -2156,6 +2860,8 @@ input OrderMaxOrderByAggregateInput {
 
 type OrderMinAggregate {
   createdAt: DateTime
+  deleted: Boolean
+  fulilled: Boolean
   id: Int
   identifier: String
   restaurantId: Int
@@ -2165,6 +2871,8 @@ type OrderMinAggregate {
 
 input OrderMinOrderByAggregateInput {
   createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
   id: SortOrder
   identifier: SortOrder
   restaurantId: SortOrder
@@ -2183,6 +2891,8 @@ input OrderOrderByWithAggregationInput {
   _min: OrderMinOrderByAggregateInput
   _sum: OrderSumOrderByAggregateInput
   createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
   id: SortOrder
   identifier: SortOrder
   restaurantId: SortOrder
@@ -2192,17 +2902,26 @@ input OrderOrderByWithAggregationInput {
 
 input OrderOrderByWithRelationInput {
   createdAt: SortOrder
+  deleted: SortOrder
+  fulilled: SortOrder
   id: SortOrder
   identifier: SortOrder
-  items: ItemOrderByRelationAggregateInput
+  orderItems: OrderItemOrderByRelationAggregateInput
   restaurant: RestaurantOrderByWithRelationInput
   restaurantId: SortOrder
   table: SortOrder
   updatedAt: SortOrder
 }
 
+input OrderRelationFilter {
+  is: OrderWhereInput
+  isNot: OrderWhereInput
+}
+
 enum OrderScalarFieldEnum {
   createdAt
+  deleted
+  fulilled
   id
   identifier
   restaurantId
@@ -2215,6 +2934,8 @@ input OrderScalarWhereInput {
   NOT: [OrderScalarWhereInput!]
   OR: [OrderScalarWhereInput!]
   createdAt: DateTimeFilter
+  deleted: BoolFilter
+  fulilled: BoolFilter
   id: IntFilter
   identifier: StringFilter
   restaurantId: IntFilter
@@ -2227,6 +2948,8 @@ input OrderScalarWhereWithAggregatesInput {
   NOT: [OrderScalarWhereWithAggregatesInput!]
   OR: [OrderScalarWhereWithAggregatesInput!]
   createdAt: DateTimeWithAggregatesFilter
+  deleted: BoolWithAggregatesFilter
+  fulilled: BoolWithAggregatesFilter
   id: IntWithAggregatesFilter
   identifier: StringWithAggregatesFilter
   restaurantId: IntWithAggregatesFilter
@@ -2246,41 +2969,27 @@ input OrderSumOrderByAggregateInput {
 
 input OrderUpdateInput {
   createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
-  items: ItemUpdateManyWithoutItemsInput
-  restaurant: RestaurantUpdateOneRequiredWithoutOrderInput
+  orderItems: OrderItemUpdateManyWithoutOrderInput
+  restaurant: RestaurantUpdateOneRequiredWithoutOrdersInput
   table: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input OrderUpdateManyMutationInput {
   createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   table: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input OrderUpdateManyWithWhereWithoutItemsInput {
-  data: OrderUpdateManyMutationInput!
-  where: OrderScalarWhereInput!
-}
-
 input OrderUpdateManyWithWhereWithoutRestaurantInput {
   data: OrderUpdateManyMutationInput!
   where: OrderScalarWhereInput!
-}
-
-input OrderUpdateManyWithoutItemsInput {
-  connect: [OrderWhereUniqueInput!]
-  connectOrCreate: [OrderCreateOrConnectWithoutItemsInput!]
-  create: [OrderCreateWithoutItemsInput!]
-  delete: [OrderWhereUniqueInput!]
-  deleteMany: [OrderScalarWhereInput!]
-  disconnect: [OrderWhereUniqueInput!]
-  set: [OrderWhereUniqueInput!]
-  update: [OrderUpdateWithWhereUniqueWithoutItemsInput!]
-  updateMany: [OrderUpdateManyWithWhereWithoutItemsInput!]
-  upsert: [OrderUpsertWithWhereUniqueWithoutItemsInput!]
 }
 
 input OrderUpdateManyWithoutRestaurantInput {
@@ -2297,9 +3006,12 @@ input OrderUpdateManyWithoutRestaurantInput {
   upsert: [OrderUpsertWithWhereUniqueWithoutRestaurantInput!]
 }
 
-input OrderUpdateWithWhereUniqueWithoutItemsInput {
-  data: OrderUpdateWithoutItemsInput!
-  where: OrderWhereUniqueInput!
+input OrderUpdateOneRequiredWithoutOrderItemsInput {
+  connect: OrderWhereUniqueInput
+  connectOrCreate: OrderCreateOrConnectWithoutOrderItemsInput
+  create: OrderCreateWithoutOrderItemsInput
+  update: OrderUpdateWithoutOrderItemsInput
+  upsert: OrderUpsertWithoutOrderItemsInput
 }
 
 input OrderUpdateWithWhereUniqueWithoutRestaurantInput {
@@ -2307,26 +3019,24 @@ input OrderUpdateWithWhereUniqueWithoutRestaurantInput {
   where: OrderWhereUniqueInput!
 }
 
-input OrderUpdateWithoutItemsInput {
+input OrderUpdateWithoutOrderItemsInput {
   createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
-  restaurant: RestaurantUpdateOneRequiredWithoutOrderInput
+  restaurant: RestaurantUpdateOneRequiredWithoutOrdersInput
   table: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input OrderUpdateWithoutRestaurantInput {
   createdAt: DateTimeFieldUpdateOperationsInput
+  deleted: BoolFieldUpdateOperationsInput
+  fulilled: BoolFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
-  items: ItemUpdateManyWithoutItemsInput
+  orderItems: OrderItemUpdateManyWithoutOrderInput
   table: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
-}
-
-input OrderUpsertWithWhereUniqueWithoutItemsInput {
-  create: OrderCreateWithoutItemsInput!
-  update: OrderUpdateWithoutItemsInput!
-  where: OrderWhereUniqueInput!
 }
 
 input OrderUpsertWithWhereUniqueWithoutRestaurantInput {
@@ -2335,14 +3045,21 @@ input OrderUpsertWithWhereUniqueWithoutRestaurantInput {
   where: OrderWhereUniqueInput!
 }
 
+input OrderUpsertWithoutOrderItemsInput {
+  create: OrderCreateWithoutOrderItemsInput!
+  update: OrderUpdateWithoutOrderItemsInput!
+}
+
 input OrderWhereInput {
   AND: [OrderWhereInput!]
   NOT: [OrderWhereInput!]
   OR: [OrderWhereInput!]
   createdAt: DateTimeFilter
+  deleted: BoolFilter
+  fulilled: BoolFilter
   id: IntFilter
   identifier: StringFilter
-  items: ItemListRelationFilter
+  orderItems: OrderItemListRelationFilter
   restaurant: RestaurantRelationFilter
   restaurantId: IntFilter
   table: StringFilter
@@ -2355,34 +3072,37 @@ input OrderWhereUniqueInput {
 }
 
 type Query {
-  aggregateCateogry(cursor: CateogryWhereUniqueInput, orderBy: [CateogryOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryWhereInput): AggregateCateogry!
-  aggregateCateogryI18L(cursor: CateogryI18LWhereUniqueInput, orderBy: [CateogryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryI18LWhereInput): AggregateCateogryI18L!
+  aggregateCategory(cursor: CategoryWhereUniqueInput, orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): AggregateCategory!
+  aggregateCategoryI18L(cursor: CategoryI18LWhereUniqueInput, orderBy: [CategoryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryI18LWhereInput): AggregateCategoryI18L!
   aggregateItem(cursor: ItemWhereUniqueInput, orderBy: [ItemOrderByWithRelationInput!], skip: Int, take: Int, where: ItemWhereInput): AggregateItem!
   aggregateItemI18L(cursor: ItemI18LWhereUniqueInput, orderBy: [ItemI18LOrderByWithRelationInput!], skip: Int, take: Int, where: ItemI18LWhereInput): AggregateItemI18L!
   aggregateMenu(cursor: MenuWhereUniqueInput, orderBy: [MenuOrderByWithRelationInput!], skip: Int, take: Int, where: MenuWhereInput): AggregateMenu!
   aggregateOrder(cursor: OrderWhereUniqueInput, orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): AggregateOrder!
+  aggregateOrderItem(cursor: OrderItemWhereUniqueInput, orderBy: [OrderItemOrderByWithRelationInput!], skip: Int, take: Int, where: OrderItemWhereInput): AggregateOrderItem!
   aggregateRestaurant(cursor: RestaurantWhereUniqueInput, orderBy: [RestaurantOrderByWithRelationInput!], skip: Int, take: Int, where: RestaurantWhereInput): AggregateRestaurant!
   aggregateRestaurantI18L(cursor: RestaurantI18LWhereUniqueInput, orderBy: [RestaurantI18LOrderByWithRelationInput!], skip: Int, take: Int, where: RestaurantI18LWhereInput): AggregateRestaurantI18L!
   aggregateUser(cursor: UserWhereUniqueInput, orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): AggregateUser!
-  cateogries(cursor: CateogryWhereUniqueInput, distinct: [CateogryScalarFieldEnum!], orderBy: [CateogryOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryWhereInput): [Cateogry!]!
-  cateogry(where: CateogryWhereUniqueInput!): Cateogry
-  cateogryI18L(where: CateogryI18LWhereUniqueInput!): CateogryI18L
-  cateogryI18LS(cursor: CateogryI18LWhereUniqueInput, distinct: [CateogryI18LScalarFieldEnum!], orderBy: [CateogryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryI18LWhereInput): [CateogryI18L!]!
-  findFirstCateogry(cursor: CateogryWhereUniqueInput, distinct: [CateogryScalarFieldEnum!], orderBy: [CateogryOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryWhereInput): Cateogry
-  findFirstCateogryI18L(cursor: CateogryI18LWhereUniqueInput, distinct: [CateogryI18LScalarFieldEnum!], orderBy: [CateogryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CateogryI18LWhereInput): CateogryI18L
+  categories(cursor: CategoryWhereUniqueInput, distinct: [CategoryScalarFieldEnum!], orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): [Category!]!
+  category(where: CategoryWhereUniqueInput!): Category
+  categoryI18L(where: CategoryI18LWhereUniqueInput!): CategoryI18L
+  categoryI18LS(cursor: CategoryI18LWhereUniqueInput, distinct: [CategoryI18LScalarFieldEnum!], orderBy: [CategoryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryI18LWhereInput): [CategoryI18L!]!
+  findFirstCategory(cursor: CategoryWhereUniqueInput, distinct: [CategoryScalarFieldEnum!], orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): Category
+  findFirstCategoryI18L(cursor: CategoryI18LWhereUniqueInput, distinct: [CategoryI18LScalarFieldEnum!], orderBy: [CategoryI18LOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryI18LWhereInput): CategoryI18L
   findFirstItem(cursor: ItemWhereUniqueInput, distinct: [ItemScalarFieldEnum!], orderBy: [ItemOrderByWithRelationInput!], skip: Int, take: Int, where: ItemWhereInput): Item
   findFirstItemI18L(cursor: ItemI18LWhereUniqueInput, distinct: [ItemI18LScalarFieldEnum!], orderBy: [ItemI18LOrderByWithRelationInput!], skip: Int, take: Int, where: ItemI18LWhereInput): ItemI18L
   findFirstMenu(cursor: MenuWhereUniqueInput, distinct: [MenuScalarFieldEnum!], orderBy: [MenuOrderByWithRelationInput!], skip: Int, take: Int, where: MenuWhereInput): Menu
   findFirstOrder(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): Order
+  findFirstOrderItem(cursor: OrderItemWhereUniqueInput, distinct: [OrderItemScalarFieldEnum!], orderBy: [OrderItemOrderByWithRelationInput!], skip: Int, take: Int, where: OrderItemWhereInput): OrderItem
   findFirstRestaurant(cursor: RestaurantWhereUniqueInput, distinct: [RestaurantScalarFieldEnum!], orderBy: [RestaurantOrderByWithRelationInput!], skip: Int, take: Int, where: RestaurantWhereInput): Restaurant
   findFirstRestaurantI18L(cursor: RestaurantI18LWhereUniqueInput, distinct: [RestaurantI18LScalarFieldEnum!], orderBy: [RestaurantI18LOrderByWithRelationInput!], skip: Int, take: Int, where: RestaurantI18LWhereInput): RestaurantI18L
   findFirstUser(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): User
-  groupByCateogry(by: [CateogryScalarFieldEnum!]!, having: CateogryScalarWhereWithAggregatesInput, orderBy: [CateogryOrderByWithAggregationInput!], skip: Int, take: Int, where: CateogryWhereInput): [CateogryGroupBy!]!
-  groupByCateogryI18L(by: [CateogryI18LScalarFieldEnum!]!, having: CateogryI18LScalarWhereWithAggregatesInput, orderBy: [CateogryI18LOrderByWithAggregationInput!], skip: Int, take: Int, where: CateogryI18LWhereInput): [CateogryI18LGroupBy!]!
+  groupByCategory(by: [CategoryScalarFieldEnum!]!, having: CategoryScalarWhereWithAggregatesInput, orderBy: [CategoryOrderByWithAggregationInput!], skip: Int, take: Int, where: CategoryWhereInput): [CategoryGroupBy!]!
+  groupByCategoryI18L(by: [CategoryI18LScalarFieldEnum!]!, having: CategoryI18LScalarWhereWithAggregatesInput, orderBy: [CategoryI18LOrderByWithAggregationInput!], skip: Int, take: Int, where: CategoryI18LWhereInput): [CategoryI18LGroupBy!]!
   groupByItem(by: [ItemScalarFieldEnum!]!, having: ItemScalarWhereWithAggregatesInput, orderBy: [ItemOrderByWithAggregationInput!], skip: Int, take: Int, where: ItemWhereInput): [ItemGroupBy!]!
   groupByItemI18L(by: [ItemI18LScalarFieldEnum!]!, having: ItemI18LScalarWhereWithAggregatesInput, orderBy: [ItemI18LOrderByWithAggregationInput!], skip: Int, take: Int, where: ItemI18LWhereInput): [ItemI18LGroupBy!]!
   groupByMenu(by: [MenuScalarFieldEnum!]!, having: MenuScalarWhereWithAggregatesInput, orderBy: [MenuOrderByWithAggregationInput!], skip: Int, take: Int, where: MenuWhereInput): [MenuGroupBy!]!
   groupByOrder(by: [OrderScalarFieldEnum!]!, having: OrderScalarWhereWithAggregatesInput, orderBy: [OrderOrderByWithAggregationInput!], skip: Int, take: Int, where: OrderWhereInput): [OrderGroupBy!]!
+  groupByOrderItem(by: [OrderItemScalarFieldEnum!]!, having: OrderItemScalarWhereWithAggregatesInput, orderBy: [OrderItemOrderByWithAggregationInput!], skip: Int, take: Int, where: OrderItemWhereInput): [OrderItemGroupBy!]!
   groupByRestaurant(by: [RestaurantScalarFieldEnum!]!, having: RestaurantScalarWhereWithAggregatesInput, orderBy: [RestaurantOrderByWithAggregationInput!], skip: Int, take: Int, where: RestaurantWhereInput): [RestaurantGroupBy!]!
   groupByRestaurantI18L(by: [RestaurantI18LScalarFieldEnum!]!, having: RestaurantI18LScalarWhereWithAggregatesInput, orderBy: [RestaurantI18LOrderByWithAggregationInput!], skip: Int, take: Int, where: RestaurantI18LWhereInput): [RestaurantI18LGroupBy!]!
   groupByUser(by: [UserScalarFieldEnum!]!, having: UserScalarWhereWithAggregatesInput, orderBy: [UserOrderByWithAggregationInput!], skip: Int, take: Int, where: UserWhereInput): [UserGroupBy!]!
@@ -2393,6 +3113,8 @@ type Query {
   menu(where: MenuWhereUniqueInput!): Menu
   menus(cursor: MenuWhereUniqueInput, distinct: [MenuScalarFieldEnum!], orderBy: [MenuOrderByWithRelationInput!], skip: Int, take: Int, where: MenuWhereInput): [Menu!]!
   order(where: OrderWhereUniqueInput!): Order
+  orderItem(where: OrderItemWhereUniqueInput!): OrderItem
+  orderItems(cursor: OrderItemWhereUniqueInput, distinct: [OrderItemScalarFieldEnum!], orderBy: [OrderItemOrderByWithRelationInput!], skip: Int, take: Int, where: OrderItemWhereInput): [OrderItem!]!
   orders(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
   restaurant(where: RestaurantWhereUniqueInput!): Restaurant
   restaurantI18L(where: RestaurantI18LWhereUniqueInput!): RestaurantI18L
@@ -2409,13 +3131,15 @@ enum QueryMode {
 
 type Restaurant {
   _count: RestaurantCount
+  categories(cursor: CategoryWhereUniqueInput, distinct: [CategoryScalarFieldEnum!], orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): [Category!]!
   content(cursor: RestaurantI18LWhereUniqueInput, distinct: [RestaurantI18LScalarFieldEnum!], orderBy: [RestaurantI18LOrderByWithRelationInput!], skip: Int, take: Int, where: RestaurantI18LWhereInput): [RestaurantI18L!]!
   createdAt: DateTime!
   id: Int!
   identifier: String!
+  inventory(cursor: ItemWhereUniqueInput, distinct: [ItemScalarFieldEnum!], orderBy: [ItemOrderByWithRelationInput!], skip: Int, take: Int, where: ItemWhereInput): [Item!]!
   logo: String!
   menu: Menu
-  order(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
+  orders(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
   slug: String!
   updatedAt: DateTime!
 }
@@ -2429,8 +3153,10 @@ input RestaurantAvgOrderByAggregateInput {
 }
 
 type RestaurantCount {
+  categories: Int!
   content: Int!
-  order: Int!
+  inventory: Int!
+  orders: Int!
 }
 
 type RestaurantCountAggregate {
@@ -2453,12 +3179,14 @@ input RestaurantCountOrderByAggregateInput {
 }
 
 input RestaurantCreateInput {
+  categories: CategoryCreateNestedManyWithoutRestaurantInput
   content: RestaurantI18LCreateNestedManyWithoutRestaurantInput
   createdAt: DateTime
   identifier: String!
+  inventory: ItemCreateNestedManyWithoutRestaurantInput
   logo: String!
   menu: MenuCreateNestedOneWithoutRestaurantInput
-  order: OrderCreateNestedManyWithoutRestaurantInput
+  orders: OrderCreateNestedManyWithoutRestaurantInput
   slug: String!
   updatedAt: DateTime
 }
@@ -2472,10 +3200,22 @@ input RestaurantCreateManyInput {
   updatedAt: DateTime
 }
 
+input RestaurantCreateNestedOneWithoutCategoriesInput {
+  connect: RestaurantWhereUniqueInput
+  connectOrCreate: RestaurantCreateOrConnectWithoutCategoriesInput
+  create: RestaurantCreateWithoutCategoriesInput
+}
+
 input RestaurantCreateNestedOneWithoutContentInput {
   connect: RestaurantWhereUniqueInput
   connectOrCreate: RestaurantCreateOrConnectWithoutContentInput
   create: RestaurantCreateWithoutContentInput
+}
+
+input RestaurantCreateNestedOneWithoutInventoryInput {
+  connect: RestaurantWhereUniqueInput
+  connectOrCreate: RestaurantCreateOrConnectWithoutInventoryInput
+  create: RestaurantCreateWithoutInventoryInput
 }
 
 input RestaurantCreateNestedOneWithoutMenuInput {
@@ -2484,14 +3224,24 @@ input RestaurantCreateNestedOneWithoutMenuInput {
   create: RestaurantCreateWithoutMenuInput
 }
 
-input RestaurantCreateNestedOneWithoutOrderInput {
+input RestaurantCreateNestedOneWithoutOrdersInput {
   connect: RestaurantWhereUniqueInput
-  connectOrCreate: RestaurantCreateOrConnectWithoutOrderInput
-  create: RestaurantCreateWithoutOrderInput
+  connectOrCreate: RestaurantCreateOrConnectWithoutOrdersInput
+  create: RestaurantCreateWithoutOrdersInput
+}
+
+input RestaurantCreateOrConnectWithoutCategoriesInput {
+  create: RestaurantCreateWithoutCategoriesInput!
+  where: RestaurantWhereUniqueInput!
 }
 
 input RestaurantCreateOrConnectWithoutContentInput {
   create: RestaurantCreateWithoutContentInput!
+  where: RestaurantWhereUniqueInput!
+}
+
+input RestaurantCreateOrConnectWithoutInventoryInput {
+  create: RestaurantCreateWithoutInventoryInput!
   where: RestaurantWhereUniqueInput!
 }
 
@@ -2500,35 +3250,65 @@ input RestaurantCreateOrConnectWithoutMenuInput {
   where: RestaurantWhereUniqueInput!
 }
 
-input RestaurantCreateOrConnectWithoutOrderInput {
-  create: RestaurantCreateWithoutOrderInput!
+input RestaurantCreateOrConnectWithoutOrdersInput {
+  create: RestaurantCreateWithoutOrdersInput!
   where: RestaurantWhereUniqueInput!
 }
 
+input RestaurantCreateWithoutCategoriesInput {
+  content: RestaurantI18LCreateNestedManyWithoutRestaurantInput
+  createdAt: DateTime
+  identifier: String!
+  inventory: ItemCreateNestedManyWithoutRestaurantInput
+  logo: String!
+  menu: MenuCreateNestedOneWithoutRestaurantInput
+  orders: OrderCreateNestedManyWithoutRestaurantInput
+  slug: String!
+  updatedAt: DateTime
+}
+
 input RestaurantCreateWithoutContentInput {
+  categories: CategoryCreateNestedManyWithoutRestaurantInput
+  createdAt: DateTime
+  identifier: String!
+  inventory: ItemCreateNestedManyWithoutRestaurantInput
+  logo: String!
+  menu: MenuCreateNestedOneWithoutRestaurantInput
+  orders: OrderCreateNestedManyWithoutRestaurantInput
+  slug: String!
+  updatedAt: DateTime
+}
+
+input RestaurantCreateWithoutInventoryInput {
+  categories: CategoryCreateNestedManyWithoutRestaurantInput
+  content: RestaurantI18LCreateNestedManyWithoutRestaurantInput
   createdAt: DateTime
   identifier: String!
   logo: String!
   menu: MenuCreateNestedOneWithoutRestaurantInput
-  order: OrderCreateNestedManyWithoutRestaurantInput
+  orders: OrderCreateNestedManyWithoutRestaurantInput
   slug: String!
   updatedAt: DateTime
 }
 
 input RestaurantCreateWithoutMenuInput {
+  categories: CategoryCreateNestedManyWithoutRestaurantInput
   content: RestaurantI18LCreateNestedManyWithoutRestaurantInput
   createdAt: DateTime
   identifier: String!
+  inventory: ItemCreateNestedManyWithoutRestaurantInput
   logo: String!
-  order: OrderCreateNestedManyWithoutRestaurantInput
+  orders: OrderCreateNestedManyWithoutRestaurantInput
   slug: String!
   updatedAt: DateTime
 }
 
-input RestaurantCreateWithoutOrderInput {
+input RestaurantCreateWithoutOrdersInput {
+  categories: CategoryCreateNestedManyWithoutRestaurantInput
   content: RestaurantI18LCreateNestedManyWithoutRestaurantInput
   createdAt: DateTime
   identifier: String!
+  inventory: ItemCreateNestedManyWithoutRestaurantInput
   logo: String!
   menu: MenuCreateNestedOneWithoutRestaurantInput
   slug: String!
@@ -2842,13 +3622,15 @@ input RestaurantOrderByWithAggregationInput {
 }
 
 input RestaurantOrderByWithRelationInput {
+  categories: CategoryOrderByRelationAggregateInput
   content: RestaurantI18LOrderByRelationAggregateInput
   createdAt: SortOrder
   id: SortOrder
   identifier: SortOrder
+  inventory: ItemOrderByRelationAggregateInput
   logo: SortOrder
   menu: MenuOrderByWithRelationInput
-  order: OrderOrderByRelationAggregateInput
+  orders: OrderOrderByRelationAggregateInput
   slug: SortOrder
   updatedAt: SortOrder
 }
@@ -2888,12 +3670,14 @@ input RestaurantSumOrderByAggregateInput {
 }
 
 input RestaurantUpdateInput {
+  categories: CategoryUpdateManyWithoutRestaurantInput
   content: RestaurantI18LUpdateManyWithoutRestaurantInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
+  inventory: ItemUpdateManyWithoutRestaurantInput
   logo: StringFieldUpdateOperationsInput
   menu: MenuUpdateOneWithoutRestaurantInput
-  order: OrderUpdateManyWithoutRestaurantInput
+  orders: OrderUpdateManyWithoutRestaurantInput
   slug: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -2906,12 +3690,28 @@ input RestaurantUpdateManyMutationInput {
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
+input RestaurantUpdateOneRequiredWithoutCategoriesInput {
+  connect: RestaurantWhereUniqueInput
+  connectOrCreate: RestaurantCreateOrConnectWithoutCategoriesInput
+  create: RestaurantCreateWithoutCategoriesInput
+  update: RestaurantUpdateWithoutCategoriesInput
+  upsert: RestaurantUpsertWithoutCategoriesInput
+}
+
 input RestaurantUpdateOneRequiredWithoutContentInput {
   connect: RestaurantWhereUniqueInput
   connectOrCreate: RestaurantCreateOrConnectWithoutContentInput
   create: RestaurantCreateWithoutContentInput
   update: RestaurantUpdateWithoutContentInput
   upsert: RestaurantUpsertWithoutContentInput
+}
+
+input RestaurantUpdateOneRequiredWithoutInventoryInput {
+  connect: RestaurantWhereUniqueInput
+  connectOrCreate: RestaurantCreateOrConnectWithoutInventoryInput
+  create: RestaurantCreateWithoutInventoryInput
+  update: RestaurantUpdateWithoutInventoryInput
+  upsert: RestaurantUpsertWithoutInventoryInput
 }
 
 input RestaurantUpdateOneRequiredWithoutMenuInput {
@@ -2922,42 +3722,77 @@ input RestaurantUpdateOneRequiredWithoutMenuInput {
   upsert: RestaurantUpsertWithoutMenuInput
 }
 
-input RestaurantUpdateOneRequiredWithoutOrderInput {
+input RestaurantUpdateOneRequiredWithoutOrdersInput {
   connect: RestaurantWhereUniqueInput
-  connectOrCreate: RestaurantCreateOrConnectWithoutOrderInput
-  create: RestaurantCreateWithoutOrderInput
-  update: RestaurantUpdateWithoutOrderInput
-  upsert: RestaurantUpsertWithoutOrderInput
+  connectOrCreate: RestaurantCreateOrConnectWithoutOrdersInput
+  create: RestaurantCreateWithoutOrdersInput
+  update: RestaurantUpdateWithoutOrdersInput
+  upsert: RestaurantUpsertWithoutOrdersInput
+}
+
+input RestaurantUpdateWithoutCategoriesInput {
+  content: RestaurantI18LUpdateManyWithoutRestaurantInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  identifier: StringFieldUpdateOperationsInput
+  inventory: ItemUpdateManyWithoutRestaurantInput
+  logo: StringFieldUpdateOperationsInput
+  menu: MenuUpdateOneWithoutRestaurantInput
+  orders: OrderUpdateManyWithoutRestaurantInput
+  slug: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input RestaurantUpdateWithoutContentInput {
+  categories: CategoryUpdateManyWithoutRestaurantInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  identifier: StringFieldUpdateOperationsInput
+  inventory: ItemUpdateManyWithoutRestaurantInput
+  logo: StringFieldUpdateOperationsInput
+  menu: MenuUpdateOneWithoutRestaurantInput
+  orders: OrderUpdateManyWithoutRestaurantInput
+  slug: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input RestaurantUpdateWithoutInventoryInput {
+  categories: CategoryUpdateManyWithoutRestaurantInput
+  content: RestaurantI18LUpdateManyWithoutRestaurantInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
   logo: StringFieldUpdateOperationsInput
   menu: MenuUpdateOneWithoutRestaurantInput
-  order: OrderUpdateManyWithoutRestaurantInput
+  orders: OrderUpdateManyWithoutRestaurantInput
   slug: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input RestaurantUpdateWithoutMenuInput {
+  categories: CategoryUpdateManyWithoutRestaurantInput
   content: RestaurantI18LUpdateManyWithoutRestaurantInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
+  inventory: ItemUpdateManyWithoutRestaurantInput
   logo: StringFieldUpdateOperationsInput
-  order: OrderUpdateManyWithoutRestaurantInput
+  orders: OrderUpdateManyWithoutRestaurantInput
   slug: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input RestaurantUpdateWithoutOrderInput {
+input RestaurantUpdateWithoutOrdersInput {
+  categories: CategoryUpdateManyWithoutRestaurantInput
   content: RestaurantI18LUpdateManyWithoutRestaurantInput
   createdAt: DateTimeFieldUpdateOperationsInput
   identifier: StringFieldUpdateOperationsInput
+  inventory: ItemUpdateManyWithoutRestaurantInput
   logo: StringFieldUpdateOperationsInput
   menu: MenuUpdateOneWithoutRestaurantInput
   slug: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input RestaurantUpsertWithoutCategoriesInput {
+  create: RestaurantCreateWithoutCategoriesInput!
+  update: RestaurantUpdateWithoutCategoriesInput!
 }
 
 input RestaurantUpsertWithoutContentInput {
@@ -2965,27 +3800,34 @@ input RestaurantUpsertWithoutContentInput {
   update: RestaurantUpdateWithoutContentInput!
 }
 
+input RestaurantUpsertWithoutInventoryInput {
+  create: RestaurantCreateWithoutInventoryInput!
+  update: RestaurantUpdateWithoutInventoryInput!
+}
+
 input RestaurantUpsertWithoutMenuInput {
   create: RestaurantCreateWithoutMenuInput!
   update: RestaurantUpdateWithoutMenuInput!
 }
 
-input RestaurantUpsertWithoutOrderInput {
-  create: RestaurantCreateWithoutOrderInput!
-  update: RestaurantUpdateWithoutOrderInput!
+input RestaurantUpsertWithoutOrdersInput {
+  create: RestaurantCreateWithoutOrdersInput!
+  update: RestaurantUpdateWithoutOrdersInput!
 }
 
 input RestaurantWhereInput {
   AND: [RestaurantWhereInput!]
   NOT: [RestaurantWhereInput!]
   OR: [RestaurantWhereInput!]
+  categories: CategoryListRelationFilter
   content: RestaurantI18LListRelationFilter
   createdAt: DateTimeFilter
   id: IntFilter
   identifier: StringFilter
+  inventory: ItemListRelationFilter
   logo: StringFilter
   menu: MenuRelationFilter
-  order: OrderListRelationFilter
+  orders: OrderListRelationFilter
   slug: StringFilter
   updatedAt: DateTimeFilter
 }

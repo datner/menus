@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server-micro';
 import { NextApiHandler } from 'next';
-import { schema } from 'utils/schema';
+import { schema } from '../../utils/schema';
 
 const apolloServer = new ApolloServer({
   schema,

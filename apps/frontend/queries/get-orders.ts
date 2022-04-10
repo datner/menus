@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Item } from 'entities/menu-item';
+import { Item } from '../entities/menu-item';
 import { z } from 'zod';
 import { ThumbnailFragment } from './get-retaurant-with-menu';
 

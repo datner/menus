@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
-import { Item } from 'entities/menu-item';
-import { Locale } from 'utils/zod';
+import { Item } from '../entities/menu-item';
+import { Locale } from '../utils/zod';
 import { z } from 'zod';
 
 export const RestaurantWithMenu = z

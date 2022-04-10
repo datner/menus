@@ -1,8 +1,12 @@
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
-import type { ForwardedRef } from 'react';
+import { matchSorter, MatchSorterOptions } from 'match-sorter';
+import { ForwardedRef } from 'react';
 import { forwardRef, Fragment, useState } from 'react';
+import { unstable_batchedUpdates } from 'react-dom';
+import Loading from 'public/three-dots.svg';
+import Image from 'next/image';
 
 interface SelectProps<T> {
   options: T[];
@@ -10,15 +14,33 @@ interface SelectProps<T> {
   getOptionLabel(value: T | null): string;
   onChange(value: T | null): void;
   initialValue?: T | null;
+  matchSorterOptions?: MatchSorterOptions<T>;
+  disabled?: boolean;
+  loading?: boolean;
 }
 
 function DropdownImpl<T>(
   props: SelectProps<T>,
   ref: ForwardedRef<HTMLInputElement>
 ) {
-  const { getOptionLabel, label, onChange, options, initialValue } = props;
+  const {
+    getOptionLabel,
+    label,
+    onChange,
+    options,
+    initialValue,
+    matchSorterOptions,
+    loading,
+    disabled,
+  } = props;
   const [selected, setSelected] = useState(initialValue);
-  const [query, setQuery] = useState('');
+  const [filtered, setFiltered] = useState(options);
+
+  const handleFilter = (query: string) => {
+    unstable_batchedUpdates(() => {
+      setFiltered(matchSorter(options, query, matchSorterOptions));
+    });
+  };
 
   const handleChange = (value: T) => {
     setSelected(value);
@@ -26,7 +48,7 @@ function DropdownImpl<T>(
   };
 
   return (
-    <Combobox value={selected} onChange={handleChange}>
+    <Combobox disabled={disabled} value={selected} onChange={handleChange}>
       {({ open }) => (
         <>
           <Combobox.Label className="block text-sm font-medium text-gray-700">
@@ -41,13 +63,19 @@ function DropdownImpl<T>(
                 displayValue={(value) =>
                   value ? getOptionLabel(value as T) : ''
                 }
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => handleFilter(event.target.value)}
               />
               <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <SelectorIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
+                {loading ? (
+                  <span className="mb-1 w-5">
+                    <Image src={Loading} alt="loading" />
+                  </span>
+                ) : (
+                  <SelectorIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                )}
               </Combobox.Button>
             </div>
 
@@ -59,7 +87,17 @@ function DropdownImpl<T>(
               leaveTo="opacity-0"
             >
               <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {options.map((it) => (
+                {filtered.length + options.length === options.length && (
+                  <li
+                    key="create"
+                    className="relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900"
+                  >
+                    <span className="block truncate font-normal">
+                      No options found
+                    </span>
+                  </li>
+                )}
+                {filtered.map((it) => (
                   <Combobox.Option
                     key={getOptionLabel(it)}
                     className={({ active }) =>

@@ -42,7 +42,7 @@ model RestaurantI18L {
 model Menu {
   id           Int        @id @default(autoincrement())
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
-  restaurantId Int        @unique
+  restaurantId Int        
   identifier   String     @unique
   categories   Category[]
   createdAt    DateTime   @default(now())
@@ -51,10 +51,10 @@ model Menu {
 
 model Category {
   id           Int            @id @default(autoincrement())
-  menu         Menu           @relation(fields: [menuId], references: [id])
-  menuId       Int
+  menu         Menu?           @relation(fields: [menuId], references: [id])
+  menuId       Int?
   restaurant   Restaurant     @relation(fields: [restaurantId], references: [id])
-  restaurantId Int            @unique
+  restaurantId Int            
   identifier   String         @unique
   content      CategoryI18L[]
   items        Item[]
@@ -68,7 +68,7 @@ model CategoryI18L {
   categoryId  Int
   locale      Locale
   name        String
-  description String
+  description String?  @default("")
 }
 
 model Item {
@@ -81,7 +81,7 @@ model Item {
   category     Category    @relation(fields: [categoryId], references: [id])
   categoryId   Int
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
-  restaurantId Int         @unique
+  restaurantId Int         
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @default(now()) @updatedAt
 }

@@ -1,4 +1,4 @@
-import { extract, gqlPayload } from 'utils/zod';
+import { extract, gqlPayload } from '../utils/zod';
 import { z } from 'zod';
 
 export const Thumbnail = z.object({

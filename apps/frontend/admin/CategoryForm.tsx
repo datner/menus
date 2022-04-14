@@ -1,60 +1,92 @@
 import { useMutation } from '@apollo/client';
 import { Locale } from '@prisma/client';
-import { InputWithAddon, Input, Grid } from '@datner/ui';
+import { InputWithAddon, Input, Grid, Button } from '@datner/ui';
 import {
-  CreateCategoryResponse,
-  CreateCategoryVariables,
-  CREATE_CATEGORY,
+  UpsertCategoryResponse,
+  UpsertCategoryVariables,
+  UPSERT_CATEGORY
 } from '../mutations/category';
 import { useGetRestaurantUniques } from '../queries/restaurant';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { z } from 'zod';
+import { useEffect } from 'react';
+import { useGetCategory } from '../queries/category';
+import { getContent } from '../utils/category';
 
 interface Form {
   en: NestedValue<{
     name: string;
-    description: string;
   }>;
   he: NestedValue<{
     name: string;
-    description: string;
   }>;
   identifier: string;
 }
 
-type Props = {
-  restaurant?: string;
-};
+const CategoryLocale = z.object({
+  locale: z.enum([Locale.en, Locale.he]),
+  name: z.string(),
+  description: z.string().default('')
+})
 
-export function CategoryForm(props: Props) {
-  const { restaurant: slug } = props;
-  const { register, handleSubmit } = useForm<Form>({
-    defaultValues: {
-      en: {
-        name: '',
-        description: '',
-      },
-      he: {
-        name: '',
-        description: '',
-      },
-      identifier: '',
-    },
+const Form = z
+  .object({
+    content: CategoryLocale.array(),
+    identifier: z
+      .string()
+      .default('')
+      .transform((it) => it.split('-').slice(2).join('-')),
+  }).nullish().transform(it => ({
+    en: getContent(it, Locale.en),
+    he: getContent(it, Locale.he),
+    identifier: it ? it.identifier : ''
+  }))
+
+
+const Query = z.object({
+  restaurant: z.string().optional(),
+  category: z.string().optional(),
+});
+
+const IdentifierPrefix = z
+  .string()
+  .default('loading')
+  .transform((it) => `${it}-category-`);
+
+export function CategoryForm() {
+  const router = useRouter();
+  const query = Query.parse(router.query);
+  const { restaurant: slug, category: identifier } = query;
+  const { data: { category } = {} } = useGetCategory({
+    variables: { where: { identifier } },
+    skip: !identifier
   });
 
-  const { data: { restaurant } = {} } = useGetRestaurantUniques({ slug });
-  const identifierPrefix = `${restaurant?.identifier}-category-`;
+  const { register, handleSubmit, reset } = useForm<Form>({
+    defaultValues: Form.parse(category),
+  });
 
-  const [createCategory] = useMutation<
-    CreateCategoryResponse,
-    CreateCategoryVariables
-  >(CREATE_CATEGORY);
+  useEffect(() => {
+    reset(Form.parse(category));
+  }, [reset, category]);
+
+  const { data: { restaurant } = {} } = useGetRestaurantUniques({ slug });
+  const identifierPrefix = IdentifierPrefix.parse(restaurant?.identifier);
+
+  const [upsertCategory] = useMutation<
+    UpsertCategoryResponse,
+    UpsertCategoryVariables
+  >(UPSERT_CATEGORY);
 
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await createCategory({
+    const identifier = `${identifierPrefix}${data.identifier}`
+    await upsertCategory({
       variables: {
-        category: {
-          identifier: `${identifierPrefix}${data.identifier}`,
+        where: { id: category?.id },
+        create: {
+          identifier,
           content: {
             create: [
               {
@@ -73,23 +105,36 @@ export function CategoryForm(props: Props) {
             },
           },
         },
-      },
-    });
+        update: {
+          identifier: { set: identifier },
+          content: {
+            updateMany: [
+              { where: { locale: { equals: Locale.en } }, data: { name: { set: data.en.name } } },
+              { where: { locale: { equals: Locale.he } }, data: { name: { set: data.he.name } } },
+            ]
+          }
+        }
+      }
+    })
 
-    toast.success(`Category ${data.identifier} was successfully created!`);
+    const message = category ?
+      `Category ${category.identifier} was successfully updated!` :
+      `Category ${data.identifier} was successfully created!`
+
+    toast.success(message);
   };
 
   return (
-    <div className="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8">
-      <Grid onSubmit={handleSubmit(onSubmit)} cols={4}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8"
+    >
+      <Grid cols={4}>
         <Grid.Item w={4}>
-          <div className="flex">
-            <div className="flex-1">
-              <h3 className="text-lg font-medium leading-6 text-gray-800">
-                Properties
-              </h3>
-            </div>
-            <div className="flex-shrink-0">bababooi</div>
+          <div className="flex flex-row-reverse">
+            <Button color="primary" type="submit" size="md">
+              Save
+            </Button>
           </div>
           <hr className="mt-2" />
         </Grid.Item>
@@ -101,12 +146,7 @@ export function CategoryForm(props: Props) {
             {...register('identifier', { required: 'Identifier is Required' })}
           />
         </Grid.Item>
-        <Grid.Item w={4}>
-          <h3 className="text-lg font-medium leading-6 text-gray-800">
-            Content
-          </h3>
-          <hr className="mt-2" />
-        </Grid.Item>
+        <Grid.Spacer w={2} />
         <Grid.Item w={2}>
           <Input
             label="English Name"
@@ -122,6 +162,6 @@ export function CategoryForm(props: Props) {
           />
         </Grid.Item>
       </Grid>
-    </div>
+    </form>
   );
 }

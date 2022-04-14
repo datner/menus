@@ -6,6 +6,7 @@ module.exports = {
     join(__dirname, 'pages/**/!(*.stories|*.spec).{ts,tsx,html}'),
     join(__dirname, 'components/**/!(*.stories|*.spec).{ts,tsx,html}'),
     join(__dirname, 'admin/**/!(*.stories|*.spec).{ts,tsx,html}'),
+    join(__dirname, '../../libs/ui/**/!(*.stories|*.spec).{ts,tsx}'),
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {

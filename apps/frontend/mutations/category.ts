@@ -1,26 +1,30 @@
-import { CategoryCreateInput } from '@generated/type-graphql';
+import { CategoryCreateInput, CategoryWhereUniqueInput, CategoryUpdateInput } from '@generated/type-graphql';
 import { gql } from '@apollo/client';
-import { Locale } from '@prisma/client';
+import { CategoryContent, CategoryUniques, CATEGORY_CONTENT, CATEGORY_UNIQUES } from '../fragments/category';
 
-export const CREATE_CATEGORY = gql`
-  mutation CreateCategory($category: CategoryCreateInput!) {
-    createCategory(data: $category) {
-      id
-      content {
-        name
-        locale
-      }
+export const UPSERT_CATEGORY = gql`
+  mutation UpsertCategory(
+    $where: CategoryWhereUniqueInput!
+    $create: CategoryCreateInput!
+    $update: CategoryUpdateInput!
+  ) {
+    upsertCategory(where: $where, create: $create, update: $update) {
+      ...CategoryUniques
+      ...CategoryContent
     }
   }
+
+ ${CATEGORY_UNIQUES}
+ ${CATEGORY_CONTENT}
 `;
 
-export interface CreateCategoryResponse {
-  createCategory: {
-    id: number;
-    content: { name: string; locale: Locale }[];
-  };
+export interface UpsertCategoryResponse {
+  upsertCategory: CategoryContent & CategoryUniques
 }
 
-export interface CreateCategoryVariables {
-  category: CategoryCreateInput;
+export interface UpsertCategoryVariables {
+  where: CategoryWhereUniqueInput
+  create: CategoryCreateInput
+  update: CategoryUpdateInput
 }
+
